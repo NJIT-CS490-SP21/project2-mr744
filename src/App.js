@@ -10,26 +10,11 @@ import { useState, useRef } from 'react';
 
 function App() {
   
-  // const state = useState([]);
-  const [myList, changeList ] = useState([]); //destructuring an array
-  // pass in one arg to usestate which is our intial state value
-  //each time state changes, whole compenent will rerender
-  const inputRef = useRef(null);
-  
-  function onClickButton(){
-    // myList.push('New item added');
-    // const newList = [...myList, 'New item added'];
-    const userText = inputRef.current.value;
-    changeList(prevList => [...prevList, userText]);
-  }
-  
-  
   const [board, setBoard] = useState(
           
           ['','','','','','','','',''] 
   );
   
-
 
   function updateBoard(arrIndex, value){
   
@@ -40,25 +25,11 @@ function App() {
                 return elem;
         
       }) );
-      
-    
   }
 
-  
-  
-   
   return (
     <div>
-    <Board updateBoard={ updateBoard} board={board} />
-    <h1>My Favourites</h1>
-    <input ref={inputRef} type="text" />
-    <button onClick={onClickButton}> Add a list </button>
-      <ul>  
-        {myList.map(item => <ListItem name={item} />)};
-        
-      </ul>
-    
-    
+      <Board updateBoard={ updateBoard} board={board} />
     </div>
   );
 }
