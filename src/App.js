@@ -19,12 +19,14 @@ function App() {
   function updateBoard(arrIndex, value){
   
       setBoard(prevBoard => prevBoard.map( (elem,index) => {
+        
             if (index == arrIndex)
                 return value;
             else
                 return elem;
         
       }) );
+   
   }
 
   return (
