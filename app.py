@@ -5,7 +5,8 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder='./build/static')
 
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+cors = CORS(app, resources={r"/": {"origins": ""}})
 
 socketio = SocketIO(
     app,
@@ -14,10 +15,12 @@ socketio = SocketIO(
     manage_session=False
 )
 
+
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 def index(filename):
     return send_from_directory('./build', filename)
+
 
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connect')
@@ -31,12 +34,14 @@ def on_disconnect():
 
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided
-@socketio.on('chat')
+@socketio.on('move')
 def on_chat(data): # data is whatever arg you pass in your emit call on client
     print(str(data))
     # This emits the 'chat' event from the server to all clients except for
     # the client that emmitted the event that triggered this function
-    socketio.emit('chat',  data, broadcast=True, include_self=False)
+    socketio.emit('move',  data, broadcast=True, include_self=False)
+
+ 
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
