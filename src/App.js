@@ -15,29 +15,51 @@ function App() {
           ['','','','','','','','',''] 
   );
   
+  //initial array is empty since we don't know how many players will join
+  const [currPlayers, setPlayers] = useState([]);
+  
+  //get user input 
+  const inputRef = useRef(null);
+  
+  //show board
+  const [view, setView ] = useState(false);
+  
+  
 
   function updateBoard(arrIndex, value){
-  
-      // setBoard(prevBoard => prevBoard.map( (elem,index) => {
-        
-      //       if (index == arrIndex)
-      //           return value;
-      //       else
-      //           return elem;
-        
-      // }) );
+
       
       setBoard(prevBoard => {
-        const boardCopy = [...prevBoard];
+        const tempBoard = [...prevBoard];
         
-        boardCopy[arrIndex] = value;
+        tempBoard[arrIndex] = value;
         
-        return boardCopy;
+        return tempBoard;
         
       });
       
       socket.emit('move', {arrIndex: arrIndex, boardVal: value});
       
+  }
+  
+  
+  function onLogin(){
+    //get the text from the UI
+    const userInput = inputRef.current.value;
+    
+    //update the state for players
+    setPlayers( prevPlayers =>{ 
+      
+      const tempPlayers = [...prevPlayers];
+      tempPlayers.push(userInput);
+      return tempPlayers;
+      
+    });
+    
+  
+    //once user clicks login then only show board
+    setView((prevView)=> true);
+    
   }
   
   //define once and then always listening
@@ -46,15 +68,12 @@ function App() {
     
     //setup the data object in python file
     socket.on('move', (data) =>{
-      
-      setBoard(prevBoard => prevBoard.map( (elem,index) => {
-    
-        if (index == data.arrIndex)
-            return data.boardVal;
-        else
-            return elem;
-    
-      }) );
+
+      setBoard(prevBoard => {
+          const tempBoard = [...prevBoard];
+          tempBoard[data.arrIndex] = data.boardVal;
+          return tempBoard;
+      })
       
     });
     
@@ -62,7 +81,24 @@ function App() {
 
   return (
     <div>
-      <Board updateBoard={ updateBoard} board={board} />
+
+      <div> { currPlayers }</div>
+      
+      
+      {view ? (
+        <>
+        
+        <Board updateBoard={ updateBoard} board={board} />
+        
+        </>
+       ) : 
+          <>
+          <input ref={inputRef} type="text" />
+         <button onClick={() => onLogin()}>Login</button> 
+         </>
+      }
+       
+      
     </div>
   );
 }
