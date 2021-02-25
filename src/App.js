@@ -18,18 +18,26 @@ function App() {
 
   function updateBoard(arrIndex, value){
   
-      setBoard(prevBoard => prevBoard.map( (elem,index) => {
+      // setBoard(prevBoard => prevBoard.map( (elem,index) => {
         
-            if (index == arrIndex)
-                return value;
-            else
-                return elem;
+      //       if (index == arrIndex)
+      //           return value;
+      //       else
+      //           return elem;
         
-      }) );
+      // }) );
+      
+      setBoard(prevBoard => {
+        const boardCopy = [...prevBoard];
+        
+        boardCopy[arrIndex] = value;
+        
+        return boardCopy;
+        
+      });
       
       socket.emit('move', {arrIndex: arrIndex, boardVal: value});
       
-
   }
   
   //define once and then always listening
@@ -60,10 +68,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
