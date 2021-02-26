@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import './Board.css';
 import { Board }  from './Board.js';
+import { User } from './Users.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -34,17 +35,54 @@ function App() {
   
   
   function updateBoard(arrIndex, value){
-
-      setBoard(prevBoard => {
-        const tempBoard = [...prevBoard];
-        
-        tempBoard[arrIndex] = value;
-        
-        return tempBoard;
-        
-      });
+      //maybe we can update the playerid here based on who's name appears first in the array
+      //check who's turn it is
+      console.log("Active player ? : " + activePlayer); 
       
-      socket.emit('move', {arrIndex: arrIndex, boardVal: value});
+      setActive( currAct =>{  
+        console.log(currAct);
+        //only the active player can update the board
+        if(currAct){
+          
+          if(playerId === 1){
+              value = 'X';
+              const playId = 2;
+              socket.emit('turn', {playId: playId, active: currAct});
+          }
+          else
+          {
+              const playId = 1;
+              console.log(playerId);
+              value = 'O';
+              socket.emit('turn', {playId: playId, active: currAct});
+          }
+          
+          setBoard(prevBoard => {
+            const tempBoard = [...prevBoard];
+            
+            tempBoard[arrIndex] = value;
+            
+            return tempBoard;
+            
+          });
+          
+          socket.emit('move', {arrIndex: arrIndex, boardVal: value});
+          
+          //make this the next player you want to have the turn
+          // socket.emit('turn', {playId: playerId, active: (!currAct)});
+          
+                  //change state back to false
+          // setActive(prevActive => !prevActive);
+          return !currAct;
+          
+       }else{
+        console.log(currAct);
+        
+       }
+       
+       return currAct;
+       
+    });
   }
   
   function onLogin(){
@@ -68,21 +106,21 @@ function App() {
       console.log("The player id is: "+ playerId);
       //the very first person to login should have id of zero
       if(playerId === 0){
-         //set this to the active player so this becomes true
-         setActive(prevActive => !prevActive);
-         
-        //when the user first logs in then update their player ID and set their status to active player!
-         setPlayId( (prevId) => {
+           //set this to the active player so this becomes true
+           setActive(prevActive => !prevActive);
            
-           console.log("The prev id: " + prevId);
-           return prevId+1});
-         
-         console.log(activePlayer);
-         console.log(playerId);
+          //when the user first logs in then update their player ID and set their status to active player!
+           setPlayId( (prevId) => {
+             
+             console.log("The prev id: " + prevId);
+             return prevId+1});
+           
+           console.log(activePlayer);
+           console.log(playerId);
          
       }else{
-        
-        setPlayId( (prevId) => prevId+1);
+        console.log(currPlayers);
+        setPlayId( (prevId) => (currPlayers.length+1));
       }
   
       //doesn't update right away so we got to do this manually
@@ -112,8 +150,7 @@ function App() {
       })
       
     });
-    
-    
+  
     //going to need multiple socket.ons to listen for various events happening
     
     //updating the playerCount 
@@ -130,48 +167,33 @@ function App() {
           console.log("How is the prevId updated???: " + prevId);
           
           if(prevId === 0){
-
+             console.log("Respective id's: " + data.playerId);
              return data.playerId;
           }
           
           return prevId;
         })
         
-        
-
-        
-        // if(currPlayers === []){
-        //   console.log("It appears in the id..." + playerId)
-        //   setPlayId(prevId => (data.playerId+1));
-        // }
-        
         setPlayers(users=> [...users,data.users]);
-
-
-        //if the other player is active then set the current one to false
-        if(data.activePlayer){
-          console.log("something");
-          
-        }
+        
+      
     });
     
+    
+    socket.on('turn', (data) =>{
+
+        setPlayId( prevId => {
+              if(prevId === data.playId)
+                setActive(prevActive => data.active);
+              return prevId;
+        });
+         
+    });
+    
+    
+    
+    
   }, []);
-
-    //for logging on purposes
-    //this just complicates it even more 
-    // useEffect(() => {
-    //   const userIn = inputRef.current.value;
-    //   // action on update of movies
-    //   console.log("yes the id did get updated! to " + playerId);
-    //   console.log(currPlayers);
-    //   //I only want to emit this once
-    //   socket.emit('login', {users: userIn ,playerId: playerId, activePlayer: activePlayer});
-      
-    // }, [currPlay]);
-
-
-
-  //{currPlayers.indexOf(inputRef.current.value) + 1} 
 
   return (
     <div>
@@ -182,7 +204,8 @@ function App() {
         <>
         
         
-        <div> Player number { currPlayers } { playerId }, Is Active{ activePlayer + ""} </div>
+        <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
+        <User players={currPlayers} />
         
         
         <Board updateBoard={ updateBoard} board={board} />

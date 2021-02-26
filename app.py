@@ -8,6 +8,8 @@ app = Flask(__name__, static_folder='./build/static')
 
 cors = CORS(app, resources={r"/": {"origins": ""}})
 
+users_list = []
+
 socketio = SocketIO(
     app,
     cors_allowed_origins="*",
@@ -45,7 +47,21 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
 @socketio.on('login')
 def on_players(data):
     print(str(data))
+    
+    users_list.append(data['users'])
+    
+    
     socketio.emit('login', data, broadcast=True, include_self=False)
+    
+    
+@socketio.on('turn')
+def on_next_turn(data):
+    data['all_users'] = users_list
+    
+    print(str(data))
+    
+    #emit the playerId and if it is their turn
+    socketio.emit('turn', data, broadcast=True, include_self=False)
  
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
