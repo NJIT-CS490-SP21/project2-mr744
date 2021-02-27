@@ -2,6 +2,8 @@ import os
 from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
+from flask import request
+from flask_socketio import join_room, leave_room
 
 app = Flask(__name__, static_folder='./build/static')
 
@@ -9,6 +11,9 @@ app = Flask(__name__, static_folder='./build/static')
 cors = CORS(app, resources={r"/": {"origins": ""}})
 
 users_list = []
+
+user_dict = {}
+id_count = 1 
 
 socketio = SocketIO(
     app,
@@ -28,6 +33,7 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
+    print("The request id is : " + str(request.sid))
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -39,19 +45,32 @@ def on_disconnect():
 @socketio.on('move')
 def on_chat(data): # data is whatever arg you pass in your emit call on client
     print(str(data))
-    # This emits the 'chat' event from the server to all clients except for
-    # the client that emmitted the event that triggered this function
+
     socketio.emit('move',  data, broadcast=True, include_self=False)
 
 # keeping tracking of which players have joined the match
 @socketio.on('login')
 def on_players(data):
-    print(str(data))
+    global id_count
+
+    isActive = False
     
-    users_list.append(data['users'])
+    #the first player to join will be able to play again
+    if len(users_list) == 0:
+        isActive = True
     
+    #given the username
+    user_dict[request.sid] = [ data['username'],id_count, isActive]
+    users_list.append(data['username'])
+    id_count+=1
     
-    socketio.emit('login', data, broadcast=True, include_self=False)
+    room = data['logged']
+    
+    join_room(room)
+
+    data ={'user_dict': user_dict, 'users': users_list}
+
+    socketio.emit('login', data, broadcast=True, include_self=True, room=room)
     
 @socketio.on('list')
 def on_req_users():
@@ -64,8 +83,15 @@ def on_req_users():
 def on_next_turn(data):
     data['all_users'] = users_list
     
+    #only need to broadcast the turns to the players in the who are capable of turns
+    
+    
     print(str(data))
     
+    # #If the client we are recieving this messsage from is true then set them to false
+    # if user_dict[request.sid][2] == True:
+    #     user_dict[request.sid][2] = False
+
     #emit the playerId and if it is their turn
     socketio.emit('turn', data, broadcast=True, include_self=False)
     
