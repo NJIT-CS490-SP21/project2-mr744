@@ -11,30 +11,22 @@ const socket = io();
 
 function App() {
   
-  const [board, setBoard] = useState(
-          Array(9).fill(null)
-  );
+  const [board, setBoard] = useState(Array(9).fill(null));
   
   //initial array is empty since we don't know how many players will join
   const [currPlayers, setPlayers] = useState([]);
-  
   //get user input 
   const inputRef = useRef(null);
-  
   //show board
   const [view, setView ] = useState(false);
-  
   //show the game results 
   const [results, setResults] = useState(false);
-  
   //player id
   const [playerId, setPlayId] = useState(0);
-  
   
   //active player
   // 1 and 2 respectively for the first two players then greater than 2 otherwise
   const [activePlayer, setActive] = useState(false);
-  
   
   function updateBoard(arrIndex){
       //maybe we can update the playerid here based on who's name appears first in the array
@@ -43,7 +35,6 @@ function App() {
       
       let value = '';
 
-      
       setActive( currAct =>{  
         console.log(currAct);
         //only the active player can update the board
@@ -74,27 +65,26 @@ function App() {
              
              //to pause people from entering once the game is finished
              if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
-                socket.emit('turn', {playId: playId, active: false});
+                socket.emit('turn', {playId: playId, active: false, can_turn: "able"});
                
                 //need to create a state to display the results
                 setResults(res => true);
              }
              else
-                socket.emit('turn', {playId: playId, active: currAct});
+                socket.emit('turn', {playId: playId, active: currAct, can_turn:"able"});
              
             return tempBoard;
             
           });
           
+          //only emits for the player that is active
           socket.emit('move', {arrIndex: arrIndex, boardVal: value});
           
+          //if the player was positive now they are not
           return !currAct;
           
-       }else{
-        console.log(currAct);
-        
        }
-       
+       //if a user that isn't able to click, they will get returned false
        return currAct;
        
     });
@@ -108,53 +98,14 @@ function App() {
       //get the username from the UI
       const userInput = inputRef.current.value;
       
- 
-      //update the state for players
-      setPlayers( prevPlayers =>{ 
-        
-        const tempPlayers = [...prevPlayers];
-        tempPlayers.push(userInput);
-        return tempPlayers;
-        
-      });
-      
-      // socket.emit('login', {users: userInput , playerId: (playerId+1), activePlayer: activePlayer});
-  
-      console.log("The player id is: "+ playerId);
-      //the very first person to login should have id of zero
-      if(playerId === 0){
-  
-                               //set this to the active player so this becomes true
-         setActive(prevActive => !prevActive);
-         
-        //when the user first logs in then update their player ID and set their status to active player!
-         setPlayId( (prevId) => prevId+1);
-     
-          //request the userslist
-          // console.log(currPlayers);
-          // socket.emit('list');
-          // setPlayers(list =>{
-          //     if(list.length > 2){
-          //       console.log("here")
-          //       setPlayId( (prevId) => (list.length+1));
-          //       setActive(false);
-          //     }
-          //     return list;
-          // }); 
-           
-      }else{
-        console.log(currPlayers);
-        setPlayId( (prevId) => (currPlayers.length+1));
-      }
-  
-      //doesn't update right away so we got to do this manually
-      //pass updated list of users along with the id and who the active player is
       console.log(`Sending info: ${activePlayer} ${playerId+1}  ${userInput}`);
+      console.log(socket.id);
       
       //once user clicks login then only show board
       setView((prevView)=> true);
       
-      socket.emit('login', {users: userInput , playerId: (playerId+1), activePlayer: activePlayer});
+      //just send the username
+      socket.emit('login', {username: userInput, logged: "loggedIn"});
       
     }
       
@@ -188,26 +139,13 @@ function App() {
     socket.on('login', (data)=>{
         // const tempPlayerArr = [...data];
       
-        console.log(`Recieving info: ${data.activePlayer} ${data.playerId}  ${data.users}`);
+        console.log(`Recieving info: ${data.user_dict}`);
+        console.log(`Recieving info: ${data.users}`);
 
-        //sync all of the data 
-        // only update this if you are playid is zero
-        //why is it not updated by this point?
+        setActive(active => data.user_dict[socket.id][2])
+        setPlayId(id => data.user_dict[socket.id][1])
+        setPlayers(users => [...data.users]);
         
-        setPlayId(prevId => {
-          console.log("How is the prevId updated???: " + prevId);
-          
-          if(prevId === 0){
-             console.log("Respective id's: " + data.playerId);
-             return data.playerId;
-          }
-          
-          return prevId;
-        })
-        
-        setPlayers(users => [...users,data.users]);
-        
-      
     });
     
     socket.on('list', (data)=>{
@@ -249,7 +187,7 @@ function App() {
   
   function onReplay(){
 
-            //reset the board 
+    //reset the board 
     setBoard(board => Array(9).fill(null));
     
     //reset the active players
@@ -260,8 +198,7 @@ function App() {
     //reset the results
     setResults(res => false);
     
-        //reset all of the items again
-        
+    //reset all of the items again
     console.log("Emitting the message!: ");    
     socket.emit('replay', {board: Array(9).fill(null), active: false, res: false } );
     
