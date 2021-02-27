@@ -12,80 +12,60 @@ const socket = io();
 function App() {
   
   const [board, setBoard] = useState(Array(9).fill(null));
-  
-  //initial array is empty since we don't know how many players will join
-  const [currPlayers, setPlayers] = useState([]);
-  //get user input 
-  const inputRef = useRef(null);
-  //show board
-  const [view, setView ] = useState(false);
-  //show the game results 
-  const [results, setResults] = useState(false);
-  //player id
-  const [playerId, setPlayId] = useState(0);
-  
-  //active player
-  // 1 and 2 respectively for the first two players then greater than 2 otherwise
-  const [activePlayer, setActive] = useState(false);
+  const [currPlayers, setPlayers] = useState([]);   //initial array is empty since we don't know how many players will join
+  const inputRef = useRef(null); //get user input 
+  const [view, setView ] = useState(false);  //show board
+  const [results, setResults] = useState(false);//show the game results 
+  const [playerId, setPlayId] = useState(0);//player id
+  const [activePlayer, setActive] = useState(false);  //active player
+                                                      // 1 and 2 respectively for the first two players then greater than 2 otherwise
   
   function updateBoard(arrIndex){
-      //maybe we can update the playerid here based on who's name appears first in the array
       //check who's turn it is
-      console.log("Active player ? : " + activePlayer); 
+      console.log("Active player: " + activePlayer); 
       
       let value = '';
+      let valid = true;
 
       setActive( currAct =>{  
-        console.log(currAct);
+        console.log("we starting of with: "+ currAct);
+        
         //only the active player can update the board
         if(currAct){
-          let playId = 0;
-          
-          if(playerId === 1){
-              value = 'X';
-              playId = 2;
-              // socket.emit('turn', {playId: playId, active: currAct});
-          }
-          else
-          {
-              playId = 1;
-              console.log(playerId);
-              value = 'O';
-              // socket.emit('turn', {playId: playId, active: currAct});
-          }
-          
-          setBoard(prevBoard => {
-            const tempBoard = [...prevBoard];
             
-            tempBoard[arrIndex] = value;
-            
-             // If there is a winner disable all states to false
-             console.log(tempBoard);
-             console.log("Emitting board " + calculateWinner(tempBoard));
-             
-             //to pause people from entering once the game is finished
-             if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
-                socket.emit('turn', {playId: playId, active: false, can_turn: "able"});
+            value = playerId === 1 ? 'X' :'O';
+
+            setBoard(prevBoard => {
+                const tempBoard = [...prevBoard];
+                
+                if(tempBoard[arrIndex] == null){
+                  tempBoard[arrIndex] = value;
+                }
+                else{
+                  valid = false;
+                }
+          
+               if (valid) {
+                   if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
+                      socket.emit('turn', {can_turn: "able", status: 1});
+                     
+                      //need to create a state to display the results
+                      setResults(res => true);
+                   }
+                   else
+                      socket.emit('turn', {can_turn:"able", status: 0});
+          
+                   socket.emit('move', {arrIndex: arrIndex, boardVal: value});    
+                }
                
-                //need to create a state to display the results
-                setResults(res => true);
-             }
-             else
-                socket.emit('turn', {playId: playId, active: currAct, can_turn:"able"});
-             
-            return tempBoard;
+                return tempBoard;
             
-          });
+             });
           
-          //only emits for the player that is active
-          socket.emit('move', {arrIndex: arrIndex, boardVal: value});
-          
-          //if the player was positive now they are not
-          return !currAct;
-          
+            return !valid;
        }
-       //if a user that isn't able to click, they will get returned false
-       return currAct;
+       else
+          return currAct;
        
     });
   }
@@ -93,19 +73,12 @@ function App() {
   function onLogin(){
 
     if (inputRef != null){
+
+      const userInput = inputRef.current.value; //get the username from the UI
       
+      setView((prevView)=> true); //once user clicks login then only show board
       
-      //get the username from the UI
-      const userInput = inputRef.current.value;
-      
-      console.log(`Sending info: ${activePlayer} ${playerId+1}  ${userInput}`);
-      console.log(socket.id);
-      
-      //once user clicks login then only show board
-      setView((prevView)=> true);
-      
-      //just send the username
-      socket.emit('login', {username: userInput, logged: "loggedIn"});
+      socket.emit('login', {username: userInput, logged: "loggedIn"});  //just send the username
       
     }
       
@@ -129,64 +102,34 @@ function App() {
           }
           return tempBoard;
       })
-
-      
     });
   
     //going to need multiple socket.ons to listen for various events happening
     
     //updating the playerCount 
     socket.on('login', (data)=>{
-        // const tempPlayerArr = [...data];
-      
-        console.log(`Recieving info: ${data.user_dict}`);
-        console.log(`Recieving info: ${data.users}`);
 
         setActive(active => data.user_dict[socket.id][2])
         setPlayId(id => data.user_dict[socket.id][1])
         setPlayers(users => [...data.users]);
         
     });
-    
-    socket.on('list', (data)=>{
-        setPlayers(players => data.users);
-        
-        
-        console.log(data.users);
-    });
+
     
     socket.on('turn', (data) =>{
-
-        setPlayId( prevId => {
-              if(prevId === data.playId)
-                setActive(prevActive => data.active);
-              return prevId;
-        });
-         
+        setActive(prevActive=> data.able)
     });
   
     socket.on('replay', (data)=>{
-      
-        setPlayId(id => {
-          console.log("The id for it: " + id);
-          if(id> 2){
-            
-            setBoard(board => data.board);
-    
-            //reset the results
-            setResults(res => false);
-          }
-          return id;
-        })
-      
+        console.log(playerId);
+        setBoard(board=> data.board)
+        setResults(res => data.res)
+        setActive(act => data.active)
     });
-    
-    
-    
+  
   }, []);
   
   function onReplay(){
-
     //reset the board 
     setBoard(board => Array(9).fill(null));
     
@@ -194,13 +137,11 @@ function App() {
     if(playerId === 1){
       setActive(active => true);
     }
-    
     //reset the results
     setResults(res => false);
-    
     //reset all of the items again
     console.log("Emitting the message!: ");    
-    socket.emit('replay', {board: Array(9).fill(null), active: false, res: false } );
+    socket.emit('replay', {board: Array(9).fill(null), res: false , active: false} );
     
   }
 
@@ -232,16 +173,14 @@ function App() {
       button = "";
     }
     
-
-  
   return (
     <div>
-
-      
+      <div class="title-div">
+        <h1 class="title"> Tic Tac Toe</h1>
+      </div>
       
       {view ? (
         <>
-        
         
         <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
         <User players={currPlayers} />
@@ -252,8 +191,14 @@ function App() {
         </>
        ) : 
           <>
-          <input ref={inputRef} type="text" />
-          <button onClick={() => onLogin()}>Login</button> 
+          <div class="login-box">
+            <div class="inner">
+              <h3> Please Enter a Username!</h3>
+              <input ref={inputRef} type="text" />
+              <button onClick={() => onLogin()}>Login</button> 
+            </div>
+          </div>    
+          
          </>
       }
       
@@ -268,7 +213,6 @@ function App() {
         </>
       )}
       
-
     </div>
   );
 }

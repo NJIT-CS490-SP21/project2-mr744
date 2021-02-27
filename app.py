@@ -57,7 +57,10 @@ def on_players(data):
     
     #the first player to join will be able to play again
     if len(users_list) == 0:
+        join_room("able")
         isActive = True
+    elif len(users_list) == 1:
+        join_room("able")
     
     #given the username
     user_dict[request.sid] = [ data['username'],id_count, isActive]
@@ -72,32 +75,26 @@ def on_players(data):
 
     socketio.emit('login', data, broadcast=True, include_self=True, room=room)
     
-@socketio.on('list')
-def on_req_users():
-    
-    data = { "users": users_list}
-    socketio.emit('list', data, broadcast=True, include_self=True)
-    
     
 @socketio.on('turn')
 def on_next_turn(data):
     data['all_users'] = users_list
     
     #only need to broadcast the turns to the players in the who are capable of turns
+    room=data['can_turn']
     
-    
-    print(str(data))
-    
-    # #If the client we are recieving this messsage from is true then set them to false
-    # if user_dict[request.sid][2] == True:
-    #     user_dict[request.sid][2] = False
-
+    #if the game is finished
+    if(data['status'] == 1):
+            data['able'] = False
+    else:
+        data['able'] = True
+   
     #emit the playerId and if it is their turn
-    socketio.emit('turn', data, broadcast=True, include_self=False)
+    socketio.emit('turn', data, broadcast=True, include_self=False, room=room)
     
 @socketio.on('replay')
 def reset(data):
-    print(str(data))
+
     #emit the playerId and if it is their turn
     socketio.emit('replay', data, broadcast=True, include_self=False)
  

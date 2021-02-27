@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.title{
+  display: inline-block;
+  background-color:Blue;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  
+}
+
+.title-div{
+  display:flex;
+  justify-content:center;
+ 
+}
+
+.login-box{
+  /*text-align:center;*/
+  display:flex;
+  justify-content:center;
+  
+}
+
+.inner{
+  display: inline-block;
+  background-color:yellow;
+  padding: 4rem;
+  border-radius: 1.2rem;
+  
+}
