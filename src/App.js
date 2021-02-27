@@ -104,10 +104,11 @@ function App() {
 
     if (inputRef != null){
       
+      
       //get the username from the UI
       const userInput = inputRef.current.value;
       
-      
+ 
       //update the state for players
       setPlayers( prevPlayers =>{ 
         
@@ -117,22 +118,30 @@ function App() {
         
       });
       
+      // socket.emit('login', {users: userInput , playerId: (playerId+1), activePlayer: activePlayer});
   
       console.log("The player id is: "+ playerId);
       //the very first person to login should have id of zero
       if(playerId === 0){
-           //set this to the active player so this becomes true
-           setActive(prevActive => !prevActive);
-           
-          //when the user first logs in then update their player ID and set their status to active player!
-           setPlayId( (prevId) => {
-             
-             console.log("The prev id: " + prevId);
-             return prevId+1});
-           
-           console.log(activePlayer);
-           console.log(playerId);
+  
+                               //set this to the active player so this becomes true
+         setActive(prevActive => !prevActive);
          
+        //when the user first logs in then update their player ID and set their status to active player!
+         setPlayId( (prevId) => prevId+1);
+     
+          //request the userslist
+          // console.log(currPlayers);
+          // socket.emit('list');
+          // setPlayers(list =>{
+          //     if(list.length > 2){
+          //       console.log("here")
+          //       setPlayId( (prevId) => (list.length+1));
+          //       setActive(false);
+          //     }
+          //     return list;
+          // }); 
+           
       }else{
         console.log(currPlayers);
         setPlayId( (prevId) => (currPlayers.length+1));
@@ -167,10 +176,6 @@ function App() {
           if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
               setResults(res => true);
           }
-          
-          
-          
-          
           return tempBoard;
       })
 
@@ -200,11 +205,17 @@ function App() {
           return prevId;
         })
         
-        setPlayers(users=> [...users,data.users]);
+        setPlayers(users => [...users,data.users]);
         
       
     });
     
+    socket.on('list', (data)=>{
+        setPlayers(players => data.users);
+        
+        
+        console.log(data.users);
+    });
     
     socket.on('turn', (data) =>{
 
@@ -231,6 +242,8 @@ function App() {
         })
       
     });
+    
+    
     
   }, []);
   

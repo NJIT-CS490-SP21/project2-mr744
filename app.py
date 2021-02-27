@@ -53,6 +53,12 @@ def on_players(data):
     
     socketio.emit('login', data, broadcast=True, include_self=False)
     
+@socketio.on('list')
+def on_req_users():
+    
+    data = { "users": users_list}
+    socketio.emit('list', data, broadcast=True, include_self=True)
+    
     
 @socketio.on('turn')
 def on_next_turn(data):
