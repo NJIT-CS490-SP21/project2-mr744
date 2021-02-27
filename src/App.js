@@ -12,8 +12,6 @@ const socket = io();
 function App() {
   
   const [board, setBoard] = useState(
-          
-          // ['','','','','','','','',''] 
           Array(9).fill(null)
   );
   
@@ -25,6 +23,9 @@ function App() {
   
   //show board
   const [view, setView ] = useState(false);
+  
+  //show the game results 
+  const [results, setResults] = useState(false);
   
   //player id
   const [playerId, setPlayId] = useState(0);
@@ -72,19 +73,15 @@ function App() {
              console.log("Emitting board " + calculateWinner(tempBoard));
              
              //to pause people from entering once the game is finished
-             if (calculateWinner(tempBoard) != null || !tempBoard.includes(null))
-             {
+             if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
                 socket.emit('turn', {playId: playId, active: false});
-                
+               
                 //need to create a state to display the results
-                
+                setResults(res => true);
              }
              else
                 socket.emit('turn', {playId: playId, active: currAct});
              
-            socket.emit('done', {board: tempBoard});
-             
-            
             return tempBoard;
             
           });
@@ -167,6 +164,12 @@ function App() {
           
           console.log(tempBoard);
           console.log("The winner is " + calculateWinner(tempBoard));
+          if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
+              setResults(res => true);
+          }
+          
+          
+          
           
           return tempBoard;
       })
@@ -212,18 +215,45 @@ function App() {
         });
          
     });
+  
+    socket.on('replay', (data)=>{
+      
+        setPlayId(id => {
+          console.log("The id for it: " + id);
+          if(id> 2){
+            
+            setBoard(board => data.board);
     
-    socket.on('done', (data) => {
-        console.log("The winner is done!: " + calculateWinner(data.board));
-        setActive(active => false);
-        
+            //reset the results
+            setResults(res => false);
+          }
+          return id;
+        })
+      
     });
-    
-    
-    
     
   }, []);
   
+  function onReplay(){
+
+            //reset the board 
+    setBoard(board => Array(9).fill(null));
+    
+    //reset the active players
+    if(playerId === 1){
+      setActive(active => true);
+    }
+    
+    //reset the results
+    setResults(res => false);
+    
+        //reset all of the items again
+        
+    console.log("Emitting the message!: ");    
+    socket.emit('replay', {board: Array(9).fill(null), active: false, res: false } );
+    
+  }
+
   function calculateWinner(squares) {
       const lines = [
         [0, 1, 2],
@@ -243,6 +273,16 @@ function App() {
       }
       return null;
     }
+    
+    //if they can see the board that means that they are logged in and only then show the button to play again
+    let button="";
+    if (view && (playerId === 1 || playerId === 2)) {
+       button = <button onClick={() => onReplay()}>Play Again!</button>;
+    } else {
+      button = "";
+    }
+    
+
   
   return (
     <div>
@@ -266,8 +306,19 @@ function App() {
           <button onClick={() => onLogin()}>Login</button> 
          </>
       }
-       
       
+      { results ? (
+        <>
+          <div>  The winner is:  </div>
+          { button }
+        </>
+        
+      ) : (
+         <>
+        </>
+      )}
+      
+
     </div>
   );
 }
