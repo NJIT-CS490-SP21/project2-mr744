@@ -13,7 +13,8 @@ function App() {
   
   const [board, setBoard] = useState(
           
-          ['','','','','','','','',''] 
+          // ['','','','','','','','',''] 
+          Array(9).fill(null)
   );
   
   //initial array is empty since we don't know how many players will join
@@ -34,27 +35,31 @@ function App() {
   const [activePlayer, setActive] = useState(false);
   
   
-  function updateBoard(arrIndex, value){
+  function updateBoard(arrIndex){
       //maybe we can update the playerid here based on who's name appears first in the array
       //check who's turn it is
       console.log("Active player ? : " + activePlayer); 
+      
+      let value = '';
+
       
       setActive( currAct =>{  
         console.log(currAct);
         //only the active player can update the board
         if(currAct){
+          let playId = 0;
           
           if(playerId === 1){
               value = 'X';
-              const playId = 2;
-              socket.emit('turn', {playId: playId, active: currAct});
+              playId = 2;
+              // socket.emit('turn', {playId: playId, active: currAct});
           }
           else
           {
-              const playId = 1;
+              playId = 1;
               console.log(playerId);
               value = 'O';
-              socket.emit('turn', {playId: playId, active: currAct});
+              // socket.emit('turn', {playId: playId, active: currAct});
           }
           
           setBoard(prevBoard => {
@@ -62,17 +67,30 @@ function App() {
             
             tempBoard[arrIndex] = value;
             
+             // If there is a winner disable all states to false
+             console.log(tempBoard);
+             console.log("Emitting board " + calculateWinner(tempBoard));
+             
+             //to pause people from entering once the game is finished
+             if (calculateWinner(tempBoard) != null || !tempBoard.includes(null))
+             {
+                socket.emit('turn', {playId: playId, active: false});
+                
+                //need to create a state to display the results
+                
+             }
+             else
+                socket.emit('turn', {playId: playId, active: currAct});
+             
+            socket.emit('done', {board: tempBoard});
+             
+            
             return tempBoard;
             
           });
           
           socket.emit('move', {arrIndex: arrIndex, boardVal: value});
           
-          //make this the next player you want to have the turn
-          // socket.emit('turn', {playId: playerId, active: (!currAct)});
-          
-                  //change state back to false
-          // setActive(prevActive => !prevActive);
           return !currAct;
           
        }else{
@@ -146,8 +164,13 @@ function App() {
       setBoard(prevBoard => {
           const tempBoard = [...prevBoard];
           tempBoard[data.arrIndex] = data.boardVal;
+          
+          console.log(tempBoard);
+          console.log("The winner is " + calculateWinner(tempBoard));
+          
           return tempBoard;
       })
+
       
     });
   
@@ -190,11 +213,37 @@ function App() {
          
     });
     
+    socket.on('done', (data) => {
+        console.log("The winner is done!: " + calculateWinner(data.board));
+        setActive(active => false);
+        
+    });
+    
     
     
     
   }, []);
-
+  
+  function calculateWinner(squares) {
+      const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+      for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+          return squares[a];
+        }
+      }
+      return null;
+    }
+  
   return (
     <div>
 
@@ -222,5 +271,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

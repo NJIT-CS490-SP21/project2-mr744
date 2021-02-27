@@ -62,6 +62,14 @@ def on_next_turn(data):
     
     #emit the playerId and if it is their turn
     socketio.emit('turn', data, broadcast=True, include_self=False)
+    
+@socketio.on('done')
+def on_next_turn(data):
+    
+    print(str(data))
+    
+    #emit the playerId and if it is their turn
+    socketio.emit('turn', data, broadcast=True, include_self=False)
  
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
