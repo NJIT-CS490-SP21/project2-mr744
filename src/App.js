@@ -222,12 +222,10 @@ function App() {
         active1="no-show";
         active2="show";
       }
-      
-      
     }
     
-
-    
+  //use this line of code for debugging purposes        
+  // <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>  
   return (
     <div>
       <div class="title-div">
@@ -241,8 +239,7 @@ function App() {
           <div><h2 class="users">Welcome, { userName } !</h2></div>
           <div> <h2 class="users"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
         </div>
-        
-        <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
+
         
         <div class="center-board">
         
