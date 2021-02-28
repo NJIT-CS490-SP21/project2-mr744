@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /*background-image: url(https://images2.alphacoders.com/104/1041188.jpg);*/
+  background-color: #cadefc;
 }
 
 code {
@@ -14,9 +16,10 @@ code {
 
 .title{
   display: inline-block;
-  background-color:Blue;
+  background-color: #393e46;
   padding: 2rem;
   border-radius: 1.25rem;
+  color:#EEEEEE;
   
 }
 
@@ -36,7 +39,7 @@ code {
 .inner{
   display: inline-block;
   text-align:center;
-  background-color:yellow;
+  background-color:#00adb5;
   padding: 4rem;
   border-radius: 1.2rem;
   
@@ -44,6 +47,14 @@ code {
 
 .user-name{
   /*text-align:center;*/
+}
+.enter-name{
+ color:#222831;
+}
+
+.input{
+    padding: 0.2rem;
+    border-radius: 0.3rem;
 }
 
 .submit{
@@ -54,6 +65,15 @@ code {
 
 .submit-bttn{
   padding: 0.4rem 1.5rem;
+  background-color:#f9ed69;
+  text-decoration:none;
+  border:0;
+  border-radius:0.2rem;
+}
+
+.submit-bttn span{
+  font-size: 1.2rem;
+  color: #40514e;
 }
 
 .center-board{
@@ -63,10 +83,36 @@ code {
 
 .players{
   text-align:center;
+  
 
 }
 
 .users{
   display: inline-block;
+  background-color: #aa96da;
+  padding:1rem;
+  border-radius:0.5rem;
+  color:white;
+  
 }
 
+.results{
+  background-color: #00fff0;
+  padding:1rem;
+  border-radius:0.4rem;
+  width: 14rem;
+  height: 20.25rem;
+  text-align:center;
+}
+
+.spectators{
+  background-color: #048998;
+  /*padding:1rem;*/
+  border-radius:0.4rem;
+  width: 16rem;
+  height: 22.25rem;
+}
+
+.spectators h2{
+  text-align:center;
+}

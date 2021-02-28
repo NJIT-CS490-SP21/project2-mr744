@@ -4,7 +4,8 @@ export function User(props){
     
     
     return (
-        <div>Spectators
+        <div class="spectators">
+            <h2> Spectators </h2>
             <div class="">
     
                   { props.players.map((elem,index)=> {  

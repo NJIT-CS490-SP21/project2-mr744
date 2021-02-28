@@ -14,8 +14,8 @@ export function Result(props){
 
     return (
      
-       <div class="">
-               <h1> Game Result </h1>
+       <div class="results">
+               <h2> Game Result </h2>
               { props.result ? (
                 <>
                   <div> <h2> {text} {props.winner}!</h2>  </div>
@@ -24,6 +24,7 @@ export function Result(props){
                 
               ) : (
                  <>
+                 <h3>Game in progress...</h3>
                 </>
               )}
         </div>

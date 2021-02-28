@@ -246,12 +246,12 @@ function App() {
           <>
           <div class="login-box">
             <div class="inner">
-              <h3> Please Enter a Username!</h3>
+              <h3 class="enter-name"> Please Enter a Username!</h3>
               <div class="user-name">
-                <input ref={inputRef} type="text" />
+                <input class="input" ref={inputRef} type="text" />
               </div>
               <div class="submit">
-                <button class="submit-bttn" onClick={() => onLogin()}>Login</button> 
+                <button class="submit-bttn" onClick={() => onLogin()}><span>Login</span></button> 
               </div>
             </div>
           </div>    
