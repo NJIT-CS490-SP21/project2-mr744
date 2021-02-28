@@ -6,9 +6,6 @@ export function Board(props){
     
     return (
      
-    
-     
-    
        <div class="board">
 
               { props.board.map((elem,index)=> {  
@@ -18,10 +15,6 @@ export function Board(props){
               }) }
        
         </div>
-        
-      
-         
-   
         
         );
 }

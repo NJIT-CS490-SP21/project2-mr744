@@ -13,6 +13,7 @@ cors = CORS(app, resources={r"/": {"origins": ""}})
 users_list = []
 user_dict = {}
 id_count = 1 
+game_status = []
 
 socketio = SocketIO(
     app,
@@ -112,7 +113,7 @@ def reset(data):
 
     #emit the playerId and if it is their turn
     socketio.emit('replay', data, broadcast=True, include_self=False)
- 
+    
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(

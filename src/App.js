@@ -3,6 +3,7 @@ import './App.css';
 import './Board.css';
 import { Board }  from './Board.js';
 import { User } from './Users.js';
+import {Result } from './Result.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -19,7 +20,7 @@ function App() {
   const [results, setResults] = useState(false);//show the game results 
   const [playerId, setPlayId] = useState(0);//player id
   const [activePlayer, setActive] = useState(false);  //active player
-                                                      // 1 and 2 respectively for the first two players then greater than 2 otherwise
+  const [winner, setWinner] = useState(null);
   
   function updateBoard(arrIndex){
       //check who's turn it is
@@ -48,7 +49,23 @@ function App() {
           
                if (valid) {
                    if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
-                      socket.emit('turn', {can_turn: "able", status: 1});
+                      //1 for win, 2 for draw
+                    
+                      setUser((name)=>{
+                            
+                            if( tempBoard.includes(null)){
+                                socket.emit('turn', {can_turn: "able", status: 1, game: name});
+                                setWinner(prevWinner=> name);
+                            }
+                            else{
+                                socket.emit('turn', {can_turn: "able", status: 1, game: ""});
+                                setWinner(prevWinner=> "");
+                            }
+                            
+                            return name;
+                        })
+     
+                      
                      
                       //need to create a state to display the results
                       setResults(res => true);
@@ -101,7 +118,7 @@ function App() {
           console.log(tempBoard);
           console.log("The winner is " + calculateWinner(tempBoard));
           if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
-              setResults(res => true);
+              setResults(res => true); 
           }
           return tempBoard;
       })
@@ -118,9 +135,14 @@ function App() {
         
     });
 
-    
     socket.on('turn', (data) =>{
         setActive(prevActive=> data.able)
+        
+        if(data.status === 1){
+          console.log("updating username to: "+ data.game);
+          setWinner(win => data.game);
+        }
+        
     });
     
     socket.on('disconnect', (data) =>{
@@ -135,7 +157,7 @@ function App() {
         setPlayId(id => {
           console.log("The id for it: " + id);
           if(id> 2){
-            
+            setWinner(prevWinner=>null);
             setBoard(board => data.board);
     
             //reset the results
@@ -151,6 +173,7 @@ function App() {
   function onReplay(){
     //reset the board 
     setBoard(board => Array(9).fill(null));
+    setWinner(prevWinner=>null);
     
     //reset the active players
     if(playerId === 1){
@@ -193,6 +216,7 @@ function App() {
       button = "";
     }
     
+
     
   return (
     <div>
@@ -202,14 +226,15 @@ function App() {
       
       {view ? (
         <>
-        
-        
+      
         <div class="players"> <div><h2 class="users">Welcome, { userName } !</h2></div> <div> <h2 class="users"> { currPlayers[0] } VS { currPlayers[1]}</h2> </div></div>
         
         <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
         
-        <div class="center-board">   
-           <div>Game Result</div>
+        <div class="center-board">
+        
+           <Result result={results} button={button} winner={ winner } />
+           
            <Board updateBoard={ updateBoard} board={board} />
            
            <User players={currPlayers} />
@@ -233,17 +258,7 @@ function App() {
           
          </>
       }
-      
-      { results ? (
-        <>
-          <div>  The winner is:  </div>
-          { button }
-        </>
-        
-      ) : (
-         <>
-        </>
-      )}
+    
       
     </div>
   );

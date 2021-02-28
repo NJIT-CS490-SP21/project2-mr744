@@ -9,7 +9,8 @@ export function User(props){
     
                   { props.players.map((elem,index)=> {  
                       
-                      return <div index={index}> {elem} </div>
+                      if(index > 1)
+                        return <div index={index}> {elem} </div>
                       
                   }) }
            
