@@ -138,7 +138,19 @@ function App() {
         })
         
     });
-  
+    
+    
+      const cleanup = () => {
+         alert("closing tab!");
+         console.log("In clean up");
+      }
+
+      window.addEventListener('onbeforeunload', cleanup);
+
+      return () => {
+        window.removeEventListener('onbeforeunload', cleanup);
+     }
+    
   }, []);
   
   function onReplay(){
@@ -156,6 +168,15 @@ function App() {
     socket.emit('replay', {board: Array(9).fill(null), res: false , active: false} );
     
   }
+  
+
+  
+  
+  
+  
+  
+  
+  
 
   function calculateWinner(squares) {
       const lines = [

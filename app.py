@@ -11,7 +11,6 @@ app = Flask(__name__, static_folder='./build/static')
 cors = CORS(app, resources={r"/": {"origins": ""}})
 
 users_list = []
-
 user_dict = {}
 id_count = 1 
 
@@ -38,6 +37,34 @@ def on_connect():
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
 def on_disconnect():
+    global user_dict, users_list, id_count
+    print(user_dict)
+    print(request.sid)
+    playId = 1
+    
+     #delete user from dictionary
+     
+    if request.sid in user_dict:
+        #delete user from userlist
+        
+        users_list.pop((user_dict[request.sid][1]-1))
+        del user_dict[request.sid]
+        
+        len_list = len(users_list)
+        for key in sorted(user_dict.keys()):
+            if(playId == 1):
+                user_dict[key][2] = True
+            user_dict[key][1] = playId
+            playId += 1
+        
+        
+    id_count = playId  
+    # user_dict = {}
+    # users_list = []
+    # id_count = 0
+    print(id_count)
+    print(users_list)
+    print(user_dict)
     print('User disconnected!')
 
 # When a client emits the event 'chat' to the server, this function is run
