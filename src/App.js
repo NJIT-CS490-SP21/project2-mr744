@@ -23,14 +23,11 @@ function App() {
   const [winner, setWinner] = useState(null);
   
   function updateBoard(arrIndex){
-      //check who's turn it is
-      console.log("Active player: " + activePlayer); 
-      
+
       let value = '';
       let valid = true;
 
       setActive( currAct =>{  
-        console.log("we starting of with: "+ currAct);
         
         //only the active player can update the board
         if(currAct){
@@ -56,7 +53,6 @@ function App() {
                             if( calculateWinner(tempBoard) ==='X' || calculateWinner(tempBoard) === 'O' ){
                                 socket.emit('turn', {can_turn: "able", status: 1, game: name});
                                 setWinner(prevWinner=> name);
-                                console.log("Here on win!");
                             }
                             else{
                                 console.log("Here on draw!");
@@ -136,14 +132,12 @@ function App() {
         setActive(prevActive=> data.able)
         
         if(data.status === 1){
-          console.log("updating username to: "+ data.game);
           setWinner(win => data.game);
         }
         
     });
     
     socket.on('disconnect', (data) =>{
-        console.log("received disconnect event");
         // alert("You are being logged out since your opponent has left!");
         window.location.reload();
         // setPlayers(prevPlayers => data.users_list);
@@ -177,7 +171,6 @@ function App() {
     //reset the results
     setResults(res => false);
     //reset all of the items again
-    console.log("Emitting the message!: ");    
     socket.emit('replay', {board: Array(9).fill(null), res: false , active: false} );
     
   }

@@ -39,11 +39,7 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     global user_dict, users_list, id_count
-    print(user_dict)
-    print(request.sid)
-    # playId = 1
-    
-    
+
     if request.sid in user_dict:
         if(user_dict[request.sid][1] <= 2):
             user_dict = {}
@@ -53,8 +49,6 @@ def on_disconnect():
             
     print('User disconnected!')
     
-    
-    # socketio.emit('disconnect', {'users_list':users_list})
 
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided
