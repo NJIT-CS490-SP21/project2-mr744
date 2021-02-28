@@ -35,8 +35,37 @@ code {
 
 .inner{
   display: inline-block;
+  text-align:center;
   background-color:yellow;
   padding: 4rem;
   border-radius: 1.2rem;
   
+}
+
+.user-name{
+  /*text-align:center;*/
+}
+
+.submit{
+  /*text-align: center;*/
+  padding-top: 2rem;
+
+}
+
+.submit-bttn{
+  padding: 0.4rem 1.5rem;
+}
+
+.center-board{
+    display: flex;
+    justify-content: space-around;
+}
+
+.players{
+  text-align:center;
+
+}
+
+.users{
+  display: inline-block;
 }

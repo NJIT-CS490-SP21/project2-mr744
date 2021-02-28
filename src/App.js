@@ -14,6 +14,7 @@ function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [currPlayers, setPlayers] = useState([]);   //initial array is empty since we don't know how many players will join
   const inputRef = useRef(null); //get user input 
+  const [userName, setUser] = useState(null); //for username
   const [view, setView ] = useState(false);  //show board
   const [results, setResults] = useState(false);//show the game results 
   const [playerId, setPlayId] = useState(0);//player id
@@ -76,6 +77,8 @@ function App() {
 
       const userInput = inputRef.current.value; //get the username from the UI
       
+      setUser(user => userInput);
+      
       setView((prevView)=> true); //once user clicks login then only show board
       
       socket.emit('login', {username: userInput, logged: "loggedIn"});  //just send the username
@@ -121,10 +124,19 @@ function App() {
     });
   
     socket.on('replay', (data)=>{
-        console.log(playerId);
-        setBoard(board=> data.board)
-        setResults(res => data.res)
-        setActive(act => data.active)
+
+        setPlayId(id => {
+          console.log("The id for it: " + id);
+          if(id> 2){
+            
+            setBoard(board => data.board);
+    
+            //reset the results
+            setResults(res => false);
+          }
+          return id;
+        })
+        
     });
   
   }, []);
@@ -173,6 +185,7 @@ function App() {
       button = "";
     }
     
+    
   return (
     <div>
       <div class="title-div">
@@ -182,11 +195,18 @@ function App() {
       {view ? (
         <>
         
+        
+        <div class="players"> <div><h2 class="users">Welcome, { userName } !</h2></div> <div> <h2 class="users"> { currPlayers[0] } VS { currPlayers[1]}</h2> </div></div>
+        
         <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
-        <User players={currPlayers} />
         
-        
-        <Board updateBoard={ updateBoard} board={board} />
+        <div class="center-board">   
+           <div>Game Result</div>
+           <Board updateBoard={ updateBoard} board={board} />
+           
+           <User players={currPlayers} />
+           
+        </div>    
         
         </>
        ) : 
@@ -194,8 +214,12 @@ function App() {
           <div class="login-box">
             <div class="inner">
               <h3> Please Enter a Username!</h3>
-              <input ref={inputRef} type="text" />
-              <button onClick={() => onLogin()}>Login</button> 
+              <div class="user-name">
+                <input ref={inputRef} type="text" />
+              </div>
+              <div class="submit">
+                <button class="submit-bttn" onClick={() => onLogin()}>Login</button> 
+              </div>
             </div>
           </div>    
           

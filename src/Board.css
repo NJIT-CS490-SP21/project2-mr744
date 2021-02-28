@@ -4,9 +4,6 @@
 	display: grid; /* Enables CSS Grid */ 
 	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
   grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
-  position: relative;
- left: 12rem;
-  top: 4rem;
 }
 
 .box {
