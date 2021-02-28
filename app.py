@@ -40,32 +40,20 @@ def on_disconnect():
     global user_dict, users_list, id_count
     print(user_dict)
     print(request.sid)
-    playId = 1
+    # playId = 1
     
-     #delete user from dictionary
-     
+    
     if request.sid in user_dict:
-        #delete user from userlist
-        
-        users_list.pop((user_dict[request.sid][1]-1))
-        del user_dict[request.sid]
-        
-        len_list = len(users_list)
-        for key in sorted(user_dict.keys()):
-            if(playId == 1):
-                user_dict[key][2] = True
-            user_dict[key][1] = playId
-            playId += 1
-        
-        
-    id_count = playId  
-    # user_dict = {}
-    # users_list = []
-    # id_count = 0
-    print(id_count)
-    print(users_list)
-    print(user_dict)
+        if(user_dict[request.sid][1] <= 2):
+            user_dict = {}
+            users_list = []
+            id_count = 1
+            socketio.emit('disconnect', {'users_list':users_list})
+            
     print('User disconnected!')
+    
+    
+    # socketio.emit('disconnect', {'users_list':users_list})
 
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided

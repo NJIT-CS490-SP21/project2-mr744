@@ -122,6 +122,13 @@ function App() {
     socket.on('turn', (data) =>{
         setActive(prevActive=> data.able)
     });
+    
+    socket.on('disconnect', (data) =>{
+        console.log("received disconnect event");
+        alert("You are being logged out since your opponent has left!");
+        window.location.reload();
+        // setPlayers(prevPlayers => data.users_list);
+    });
   
     socket.on('replay', (data)=>{
 
@@ -138,18 +145,6 @@ function App() {
         })
         
     });
-    
-    
-      const cleanup = () => {
-         alert("closing tab!");
-         console.log("In clean up");
-      }
-
-      window.addEventListener('onbeforeunload', cleanup);
-
-      return () => {
-        window.removeEventListener('onbeforeunload', cleanup);
-     }
     
   }, []);
   
@@ -168,15 +163,7 @@ function App() {
     socket.emit('replay', {board: Array(9).fill(null), res: false , active: false} );
     
   }
-  
 
-  
-  
-  
-  
-  
-  
-  
 
   function calculateWinner(squares) {
       const lines = [
