@@ -48,25 +48,25 @@ function App() {
                 }
           
                if (valid) {
+                   //if the game is not drawn or the board includes no empty elements
                    if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
-                      //1 for win, 2 for draw
-                    
+                      
                       setUser((name)=>{
                             
-                            if( tempBoard.includes(null)){
+                            if( calculateWinner(tempBoard) ==='X' || calculateWinner(tempBoard) === 'O' ){
                                 socket.emit('turn', {can_turn: "able", status: 1, game: name});
                                 setWinner(prevWinner=> name);
+                                console.log("Here on win!");
                             }
                             else{
+                                console.log("Here on draw!");
                                 socket.emit('turn', {can_turn: "able", status: 1, game: ""});
                                 setWinner(prevWinner=> "");
                             }
                             
                             return name;
                         })
-     
-                      
-                     
+                        
                       //need to create a state to display the results
                       setResults(res => true);
                    }
@@ -114,9 +114,6 @@ function App() {
       setBoard(prevBoard => {
           const tempBoard = [...prevBoard];
           tempBoard[data.arrIndex] = data.boardVal;
-          
-          console.log(tempBoard);
-          console.log("The winner is " + calculateWinner(tempBoard));
           if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)){
               setResults(res => true); 
           }
@@ -147,25 +144,23 @@ function App() {
     
     socket.on('disconnect', (data) =>{
         console.log("received disconnect event");
-        alert("You are being logged out since your opponent has left!");
+        // alert("You are being logged out since your opponent has left!");
         window.location.reload();
         // setPlayers(prevPlayers => data.users_list);
     });
   
     socket.on('replay', (data)=>{
 
+        setWinner(prevWinner=>null);
+        setBoard(board => data.board);
+        setResults(res => false);
         setPlayId(id => {
-          console.log("The id for it: " + id);
-          if(id> 2){
-            setWinner(prevWinner=>null);
-            setBoard(board => data.board);
-    
-            //reset the results
-            setResults(res => false);
-          }
-          return id;
-        })
-        
+            if(id === 1)
+                setActive(prev => true);
+          
+            return id;
+          });
+          
     });
     
   }, []);
@@ -211,9 +206,24 @@ function App() {
     //if they can see the board that means that they are logged in and only then show the button to play again
     let button="";
     if (view && (playerId === 1 || playerId === 2)) {
-       button = <button onClick={() => onReplay()}>Play Again!</button>;
+       button = <button class="again" onClick={() => onReplay()}><span>Play Again!</span></button>;
     } else {
       button = "";
+    }
+    
+    
+    let active1, active2 = "";
+    if(!results){
+      
+      if((activePlayer && playerId === 1) || (!activePlayer && playerId === 2)){
+        active1="show";
+        active2="no-show";
+      }else if((activePlayer && playerId === 2) || (!activePlayer && playerId === 1) ){
+        active1="no-show";
+        active2="show";
+      }
+      
+      
     }
     
 
@@ -227,7 +237,10 @@ function App() {
       {view ? (
         <>
       
-        <div class="players"> <div><h2 class="users">Welcome, { userName } !</h2></div> <div> <h2 class="users"> { currPlayers[0] } VS { currPlayers[1]}</h2> </div></div>
+        <div class="players"> 
+          <div><h2 class="users">Welcome, { userName } !</h2></div>
+          <div> <h2 class="users"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
+        </div>
         
         <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>
         

@@ -102,6 +102,8 @@ def on_next_turn(data):
     #if the game is finished
     if(data['status'] == 1):
             data['able'] = False
+            socketio.emit('turn', data, broadcast=True, include_self=False)
+            return None
     else:
         data['able'] = True
    

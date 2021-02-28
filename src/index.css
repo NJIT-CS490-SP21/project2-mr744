@@ -71,7 +71,22 @@ code {
   border-radius:0.2rem;
 }
 
+
+
 .submit-bttn span{
+  font-size: 1.2rem;
+  color: #40514e;
+}
+
+.again{
+  padding: 0.4rem 1.5rem;
+  background-color:#f9ed69;
+  text-decoration:none;
+  border:0;
+  border-radius:0.2rem;
+  
+}
+.again span{
   font-size: 1.2rem;
   color: #40514e;
 }
@@ -107,12 +122,42 @@ code {
 
 .spectators{
   background-color: #048998;
-  /*padding:1rem;*/
   border-radius:0.4rem;
   width: 16rem;
   height: 22.25rem;
 }
 
-.spectators h2{
+.spectators h2,h3{
   text-align:center;
+}
+.spectators h2{
+  color:#ffde7d;
+  margin-bottom:0;
+}
+
+.spectators h3{
+  color:white;
+}
+.viewers{
+  display:flex;
+  justify-content:center;
+  position:relative;
+  right:1.25rem;
+}
+
+.viewers ul{
+  margin-top:0;
+  color:#2EB67D;
+}
+
+.show{
+    background-color: #f9ed69;
+    color:black;
+    border-radius: 0.4rem;
+    padding: 0.2rem;
+    
+}
+
+.no-show{
+
 }
