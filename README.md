@@ -7,6 +7,11 @@ between 2 players when two instances of the tab are opened. Additional players j
 
 In this project, I used the Flask framework, Socket.IO library for real time communication, and the React library.
 
+### References
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [Flask SocketIO](https://flask-socketio.readthedocs.io/en/latest/)
+- [Javascript/React SocketIO](https://socket.io/docs/v3)
+- [React Docs](https://reactjs.org/docs/getting-started.html)
+
 ### Flask and React App
 ---
 #### About 
@@ -67,5 +72,22 @@ Heroku is a cloud platform company which will essentially allow us to host our c
   3. Now we will add the nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
   4. Now we will push our code to heroku: `git push heroku main`
 
+### Known Problems
+1) One issue is that when players join the game in the middle of the match. The board is not updated for them, and the board starts to become buggy for them. One way I think I 
+could address this issue is by emitting the board to user when they log in. I could essentially do this by storing the most current version of the board on 
+python server and then send the board to the user.
+2) The events of disconnecting don't get synchronized for a while. Meaning that when all the users close their tabs or when they all refresh the page, the previous users from 
+the last match are still shown for a while until they get disconnected. But this can last for about 10 seconds to a minute at times and effectively makes the game state buggy as
+we don't know who is the first player. This effectively disables the game for everyone and the board is not useable at all. One way I think I would fix this is if I sped up the 
+polling frequency between the client and servers.
 
+### Technical Issues
+1) One of the biggest challenges I have faced during this assignment was that the states for either the userlist or the board were not updating properly. I was incorrectly 
+updating the state. I was basically placing my new values inside the update variable of the useState function. I realized my error once I watched [Web Dev Simplified]
+(https://www.youtube.com/watch?v=O6P86uwfdR0) on Youtube and reading the [Docs](https://reactjs.org/docs/hooks-state.html).
+2) Another issue that I faced but was able to solve was when it was a players turn they were able to click on a tile on the board even if it was clicked previously. This caused
+the player to lose their turn and waste it at the same time. My first instinct was to check if the board was updating fine and then I realized that it wasn't. The players on the
+next tab were able to see the board but then one board was overwritten by another. I realized my error was because I did not consider that I needed to check if the board at that 
+tile was already filled. So when I realized that, I just placed a "if else" statements to make sure that the players turn did not get used up even if they clicked a repeated 
+tile on the board.
 
