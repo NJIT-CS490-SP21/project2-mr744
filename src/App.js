@@ -199,7 +199,7 @@ function App() {
     //if they can see the board that means that they are logged in and only then show the button to play again
     let button="";
     if (view && (playerId === 1 || playerId === 2)) {
-       button = <button class="again" onClick={() => onReplay()}><span>Play Again!</span></button>;
+       button = <button className="again" onClick={() => onReplay()}><span>Play Again!</span></button>;
     } else {
       button = "";
     }
@@ -221,20 +221,20 @@ function App() {
   // <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>  
   return (
     <div>
-      <div class="title-div">
-        <h1 class="title"> Tic Tac Toe</h1>
+      <div className="title-div">
+        <h1 className="title"> Tic Tac Toe</h1>
       </div>
       
       {view ? (
         <>
       
-        <div class="players"> 
-          <div><h2 class="users">Welcome, { userName } !</h2></div>
-          <div> <h2 class="users"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
+        <div className="players"> 
+          <div><h2 className="users">Welcome, { userName } !</h2></div>
+          <div> <h2 className="users"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
         </div>
 
         
-        <div class="center-board">
+        <div className="center-board">
         
            <Result result={results} button={button} winner={ winner } />
            
@@ -247,14 +247,14 @@ function App() {
         </>
        ) : 
           <>
-          <div class="login-box">
-            <div class="inner">
-              <h3 class="enter-name"> Please Enter a Username!</h3>
-              <div class="user-name">
-                <input class="input" ref={inputRef} type="text" />
+          <div className="login-box">
+            <div className="inner">
+              <h3 className="enter-name"> Please Enter a Username!</h3>
+              <div className="user-name">
+                <input className="input" ref={inputRef} type="text" />
               </div>
-              <div class="submit">
-                <button class="submit-bttn" onClick={() => onLogin()}><span>Login</span></button> 
+              <div className="submit">
+                <button className="submit-bttn" onClick={() => onLogin()}><span>Login</span></button> 
               </div>
             </div>
           </div>    

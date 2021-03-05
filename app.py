@@ -43,7 +43,7 @@ def on_disconnect():
     if request.sid in user_dict:
         if(user_dict[request.sid][1] <= 2):
             user_dict = {}
-            users_list = []
+            users_list.clear()
             id_count = 1
             socketio.emit('disconnect', {'users_list':users_list})
             

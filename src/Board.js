@@ -5,8 +5,8 @@ export function Board(props){
 
     
     return (
-       <div class="board-outline">
-           <div class="board">
+       <div className="board-outline">
+           <div className="board">
     
                   { props.board.map((elem,index)=> {  
                       

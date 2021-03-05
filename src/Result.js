@@ -14,7 +14,7 @@ export function Result(props){
 
     return (
      
-       <div class="results">
+       <div className="results">
                <h2> Game Result </h2>
               { props.result ? (
                 <>

@@ -4,9 +4,9 @@ export function User(props){
     
     
     return (
-        <div class="spectators">
+        <div className="spectators">
             <h2> Spectators </h2>
-            <div class="viewers">
+            <div className="viewers">
                 <ul> 
                  
                   { props.players.map((elem,index)=> {  
