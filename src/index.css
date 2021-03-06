@@ -94,10 +94,13 @@ code {
 .center-board{
     display: flex;
     justify-content: space-around;
+    margin-bottom:2rem;
 }
 
 .players{
-  text-align:center;
+  /*text-align:center;*/
+  display: flex;
+  justify-content: space-evenly;
   
 
 }
@@ -108,6 +111,16 @@ code {
   padding:1rem;
   border-radius:0.5rem;
   color:white;
+  
+}
+.users1{
+  display: inline-block;
+  background-color: #aa96da;
+  padding:1rem;
+  border-radius:0.5rem;
+  color:white;
+  position: relative;
+  right: 2.75rem;
   
 }
 
@@ -159,5 +172,60 @@ code {
 }
 
 .no-show{
-
+  
 }
+
+.leader-board{
+    color: white;
+    background-color: #34495e;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+    padding: 2rem;
+    position:relative;
+    left:10rem;
+}
+.no-leader-board{
+    color: white;
+    background-color: #34495e;
+    border-radius: 0.3rem;
+    padding: 1rem;
+    position:relative;
+    left:7rem;
+    top:1rem;
+}
+
+.leader-board td{
+  padding: 0.5rem 2rem;
+  text-align:center;
+  font-size:1rem;
+}
+
+
+.show-leader{
+  padding: 0.4rem 1.5rem;
+  background-color:#f9ed69;
+  text-decoration:none;
+  border:0;
+  border-radius:0.2rem;
+  font-size:1.25rem;
+  position: relative;
+  left: 3.75rem;
+  bottom: 1rem;
+}
+.no-leader{
+  padding: 0.4rem 1.5rem;
+  background-color:#f9ed69;
+  text-decoration:none;
+  border:0;
+  border-radius:0.2rem;
+  font-size:1.25rem;
+}
+
+.select-user{
+    color: black;
+    background-color: lightgray;
+}
+
+
+
+
