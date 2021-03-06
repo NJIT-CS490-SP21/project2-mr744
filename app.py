@@ -28,6 +28,7 @@ users_list = []
 user_dict = {}
 id_count = 1 
 game_status = []
+limit = 0
 
 socketio = SocketIO(
     app,
@@ -80,19 +81,16 @@ def on_players(data):
     #first query whole table
     query_player = models.Players.query.filter_by(username=data['username']).first()
     print(query_player)
-    #player not in db
+    #player not in db, then add them
     if query_player == None:
         new_player = models.Players(username=data['username'], score=100)
         db.session.add(new_player)
         db.session.commit()
     
     isActive = False
-    #the first player to join will be able to play again
-    if len(users_list) == 0:
-        join_room("able")
-        isActive = True
-    elif len(users_list) == 1:
-        join_room("able")
+
+    if id_count == 1:
+        isActive =True
     
     #given the username
     user_dict[request.sid] = [ data['username'],id_count, isActive]
@@ -112,30 +110,53 @@ def on_players(data):
     
 @socketio.on('turn')
 def on_next_turn(data):
+    global limit
     data['all_users'] = users_list
     
-    #only need to broadcast the turns to the players in the who are capable of turns
-    room=data['can_turn']
-    
-    #if the game is finished
-    if(data['status'] == 1):
-            data['able'] = False
-            socketio.emit('turn', data, broadcast=True, include_self=False)
-            return None
-    else:
+    #if the game is finished, putting a limit here cuz the function called was getting duplicated for some reason
+    if(data['status'] == 1 and limit == 0):
+        limit+=1
+        data['able'] = False
+        
+            # this means if game is not a draw
+        if data['game'] != "":
+                
+                # find the winner, add one point
+            winner = db.session.query(models.Players).filter_by(username=data['game']).first() 
+        
+            winner.score+=1
+                
+                # #find the loser, subtract one point
+            loser_index = -1
+            if users_list.index(data['game']) == 0: #if the winner is the first player to join then make second player loser
+                loser_index = 1
+            else:
+                loser_index = 0
+                    
+            loser = db.session.query(models.Players).filter_by(username=users_list[loser_index]).first()
+            loser.score-=1
+            db.session.commit()
+                
+            #find the loser, minus one point
+        socketio.emit('turn', data, broadcast=True, include_self=False)
+        return None
+    elif limit == 0:
+        print("Sending ")
         data['able'] = True
-   
-    #emit the playerId and if it is their turn
-    socketio.emit('turn', data, broadcast=True, include_self=False, room=room)
+    
+
+        print("Sending!")
+        #emit the playerId and if it is their turn
+        socketio.emit('turn', data, broadcast=True, include_self=False)
     
 @socketio.on('replay')
 def reset(data):
-
+    global limit
+    limit = 0
     #emit the playerId and if it is their turn
     socketio.emit('replay', data, broadcast=True, include_self=False)
+
     
-
-
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
 # Note that we don't call app.run anymore. We call socketio.run with app arg

@@ -51,15 +51,15 @@ function App() {
                       setUser((name)=>{
                             
                             if( calculateWinner(tempBoard) ==='X' || calculateWinner(tempBoard) === 'O' ){
+                                console.log("Sending message winner!")
                                 socket.emit('turn', {can_turn: "able", status: 1, game: name});
                                 setWinner(prevWinner=> name);
                             }
                             else{
-                                console.log("Here on draw!");
                                 socket.emit('turn', {can_turn: "able", status: 1, game: ""});
                                 setWinner(prevWinner=> "");
                             }
-                            
+                            socket.emit('turn', {can_turn: "able", status: 1, game: name});
                             return name;
                         })
                         
@@ -68,6 +68,7 @@ function App() {
                    }
                    else
                       socket.emit('turn', {can_turn:"able", status: 0});
+          
           
                    socket.emit('move', {arrIndex: arrIndex, boardVal: value});    
                 }
@@ -89,12 +90,9 @@ function App() {
     if (inputRef != null){
 
       const userInput = inputRef.current.value; //get the username from the UI
-      
       setUser(user => userInput);
-      
       setView((prevView)=> true); //once user clicks login then only show board
-      
-      socket.emit('login', {username: userInput, logged: "loggedIn"});  //just send the username
+      socket.emit('login', {username: userInput, logged: "loggedIn"});  //just send the username and room
       
     }
       
@@ -129,18 +127,23 @@ function App() {
     });
 
     socket.on('turn', (data) =>{
-        setActive(prevActive=> data.able)
+        setPlayId(id => {
+          console.log(id);
+          if(id < 3)
+            setActive(prevActive=> data.able);
+          return id;
+        })
+
         
         if(data.status === 1){
+          console.log("The winner is: " + data.game);
           setWinner(win => data.game);
         }
         
     });
     
     socket.on('disconnect', (data) =>{
-        // alert("You are being logged out since your opponent has left!");
         window.location.reload();
-        // setPlayers(prevPlayers => data.users_list);
     });
   
     socket.on('replay', (data)=>{
