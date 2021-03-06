@@ -6,7 +6,7 @@ import { User } from './Users.js';
 import {Result } from './Result.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
-
+import { LeaderBoard } from './LeaderBoard.js';
 
 const socket = io();
 
@@ -17,11 +17,13 @@ function App() {
   const inputRef = useRef(null); //get user input 
   const [userName, setUser] = useState(null); //for username
   const [view, setView ] = useState(false);  //show board
+  const [showLead, setLead ] = useState(false);  //show board
   const [results, setResults] = useState(false);//show the game results 
   const [playerId, setPlayId] = useState(0);//player id
   const [activePlayer, setActive] = useState(false);  //active player
   const [winner, setWinner] = useState(null);
   const [symbol, setSymbol] = useState('');
+  const [leader, setLeader] = useState({});
   
 
   
@@ -62,7 +64,7 @@ function App() {
                                 socket.emit('turn', {can_turn: "able", status: 1, game: ""});
                                 setWinner(prevWinner=> "");
                             }
-                          
+                            // setLeader(lead => data.leaderboard);
                             return name;
                         })
                         
@@ -128,6 +130,14 @@ function App() {
         setActive(active => data.user_dict[socket.id][2])
         setPlayId(id => data.user_dict[socket.id][1])
         setPlayers(users => [...data.users]);
+        //update leaderboard
+        console.log("the leaders: "  + data.leaderboard[0]);
+        console.log(typeof  data.leaderboard);
+        
+        console.log(typeof JSON.parse(JSON.stringify(data.leaderboard)));
+        
+        
+        setLeader(scoreBoard => JSON.parse(data.leaderboard));
         
     });
 
@@ -144,6 +154,7 @@ function App() {
         if(data.status === 1){
           console.log("The winner is: " + data.game);
           setWinner(win => data.game);
+          setLeader(scoreBoard => JSON.parse(data.leaderboard));
         }
         
     });
@@ -231,6 +242,11 @@ function App() {
       
     }
     
+    console.log("The leader is: " + leader['Mihir']);
+    console.log("The leader is: " + JSON.stringify(leader));
+    console.log("The leader is: " + Object.values(leader));
+    console.log("The leader is: " + Object.keys(leader));
+    console.log(typeof JSON.stringify(leader));
   //use this line of code for debugging purposes        
   // <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>  
   return (
@@ -243,8 +259,9 @@ function App() {
         <>
       
         <div className="players"> 
-          <div><h2 className="users">Welcome, { userName } !</h2></div>
-          <div> <h2 className="users"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
+          <div><h2 className="users">Welcome, { userName }!</h2></div>
+          <div> <h2 className="users1"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
+          <LeaderBoard leader={leader} setLead={ setLead } showLead={showLead} user={userName} />
         </div>
 
         
@@ -258,9 +275,6 @@ function App() {
            
         </div>  
         
-        <div>
-          The LeaderBoard will go here
-        </div>
         
         </>
        ) : 
