@@ -21,6 +21,9 @@ function App() {
   const [playerId, setPlayId] = useState(0);//player id
   const [activePlayer, setActive] = useState(false);  //active player
   const [winner, setWinner] = useState(null);
+  const [symbol, setSymbol] = useState('');
+  
+
   
   function updateBoard(arrIndex){
 
@@ -59,15 +62,17 @@ function App() {
                                 socket.emit('turn', {can_turn: "able", status: 1, game: ""});
                                 setWinner(prevWinner=> "");
                             }
-                            socket.emit('turn', {can_turn: "able", status: 1, game: name});
+                          
                             return name;
                         })
                         
                       //need to create a state to display the results
                       setResults(res => true);
                    }
-                   else
-                      socket.emit('turn', {can_turn:"able", status: 0});
+                   else{
+                      socket.emit('turn', {can_turn:"able", status: 0, boardVal: value});
+                      setSymbol(symbol=> value);  
+                   }
           
           
                    socket.emit('move', {arrIndex: arrIndex, boardVal: value});    
@@ -104,7 +109,7 @@ function App() {
     
     //setup the data object in python file
     socket.on('move', (data) =>{
-
+      
       setBoard(prevBoard => {
           const tempBoard = [...prevBoard];
           tempBoard[data.arrIndex] = data.boardVal;
@@ -127,6 +132,7 @@ function App() {
     });
 
     socket.on('turn', (data) =>{
+        setSymbol(symbol=> data.boardVal);
         setPlayId(id => {
           console.log(id);
           if(id < 3)
@@ -210,14 +216,19 @@ function App() {
     
     let active1, active2 = "";
     if(!results){
-      
-      if((activePlayer && playerId === 1) || (!activePlayer && playerId === 2)){
-        active1="show";
-        active2="no-show";
-      }else if((activePlayer && playerId === 2) || (!activePlayer && playerId === 1) ){
+      console.log(symbol);
+      if(symbol === 'X'){
         active1="no-show";
         active2="show";
+      }else if(symbol === 'O'){
+        active1="show";
+        active2="no-show";
+      }else{
+        active1="show";
+        active2="no-show";
       }
+    
+      
     }
     
   //use this line of code for debugging purposes        
@@ -245,7 +256,11 @@ function App() {
            
            <User players={currPlayers} />
            
-        </div>    
+        </div>  
+        
+        <div>
+          The LeaderBoard will go here
+        </div>
         
         </>
        ) : 

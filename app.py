@@ -4,9 +4,10 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from flask_socketio import join_room, leave_room
 from dotenv import load_dotenv, find_dotenv
-
+import json
 load_dotenv(find_dotenv())
 
 app = Flask(__name__, static_folder='./build/static')
@@ -29,6 +30,7 @@ user_dict = {}
 id_count = 1 
 game_status = []
 limit = 0
+leaderboard = {}
 
 socketio = SocketIO(
     app,
@@ -76,7 +78,7 @@ def on_chat(data): # data is whatever arg you pass in your emit call on client
 # keeping tracking of which players have joined the match
 @socketio.on('login')
 def on_players(data):
-    global id_count
+    global id_count, leaderboard
     #check if username is already in database, if so no need to add them again
     #first query whole table
     query_player = models.Players.query.filter_by(username=data['username']).first()
@@ -104,13 +106,36 @@ def on_players(data):
     data ={'user_dict': user_dict, 'users': users_list}
     
     print(models.Players.query.all())
+    
+    
+    #query the leaderboard by order
+    ordered_list = models.Players.query.order_by(desc(models.Players.score)).all()
+    print(ordered_list)
+    # a1_sorted_keys = sorted(a1, key=oe.get, reverse=True)
+    
+    for user in ordered_list:
+        leaderboard[user.username] = user.score
+        # leaderboard.append([user.username,user.score])
+            
+    # a1_sorted_keys = sorted(leaderboard, key=leaderboard.get, reverse=True)
+    
+    print(leaderboard)
+    # cd = sorted(d.items(),key=operator.itemgetter(1),reverse=True)
+
+    # print("the dictionary: ")    
+    # print(a1_sorted_keys)
+    
+    data['leaderboard'] = json.dumps(leaderboard, sort_keys=False)
+    
+    print(data['leaderboard'])
 
     socketio.emit('login', data, broadcast=True, include_self=True, room=room)
     
     
 @socketio.on('turn')
 def on_next_turn(data):
-    global limit
+    global limit,leaderboard
+    print("On Last")
     data['all_users'] = users_list
     
     #if the game is finished, putting a limit here cuz the function called was getting duplicated for some reason
@@ -136,9 +161,17 @@ def on_next_turn(data):
             loser = db.session.query(models.Players).filter_by(username=users_list[loser_index]).first()
             loser.score-=1
             db.session.commit()
-                
+            
+            #update leaderboard
+            ordered_list = models.Players.query.order_by(desc(models.Players.score)).all()
+            
+            for user in ordered_list:
+                leaderboard[user.username] = user.score
+            
+            
+        data['leaderboard'] = json.dumps(leaderboard, sort_keys=False)      
             #find the loser, minus one point
-        socketio.emit('turn', data, broadcast=True, include_self=False)
+        socketio.emit('turn', data, broadcast=True, include_self=True)
         return None
     elif limit == 0:
         print("Sending ")
