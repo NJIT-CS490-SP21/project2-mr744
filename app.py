@@ -1,5 +1,4 @@
 import os
-import flask
 from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -8,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from flask_socketio import join_room, leave_room
 from dotenv import load_dotenv, find_dotenv
-import json
 load_dotenv(find_dotenv())
 
 app = Flask(__name__, static_folder='./build/static')
