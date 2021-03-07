@@ -8,6 +8,7 @@ between 2 players when two instances of the tab are opened. Additional players j
 In this project, I used the Flask framework, Socket.IO library for real time communication, and the React library.
 
 ### References
+---
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [Flask SocketIO](https://flask-socketio.readthedocs.io/en/latest/)
 - [Javascript/React SocketIO](https://socket.io/docs/v3)
 - [React Docs](https://reactjs.org/docs/getting-started.html)
@@ -48,6 +49,11 @@ This library is the bridge between our connections from one tab to another and w
 4) Now you should be able to open two tabs and play the game!
 
 ### Setting up Our Database (PostgresSql)
+---
+
+#### About
+PostgresSql is an open-source relational database management system which is also SQL compliance. We will be using this as our database to store the usernames and scores of the
+respective players.
 
 #### Installation
 1) `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql  docs`
@@ -68,6 +74,7 @@ This library is the bridge between our connections from one tab to another and w
 8) Now to save your passwords to a `sql.env` file with the following format `SQL_USER=` and `SQL_PASSWORD=`.
 
 ### SQLAlchemy
+---
 
 #### About
 To now query and access our database we will use SQLAlchemy.
@@ -109,6 +116,7 @@ Heroku is a cloud platform company which will essentially allow us to host our c
   4. Now we will push our code to heroku: `git push heroku main`
 
 ### Known Problems
+---
 1) One issue that I have is the styling with the CSS. When implementing the Leaderboard button to show the scores of the users on the UI, I would have an issue where the title
 of the players playing against one another would get pushed out of the center of the screen and to the left handside. One method that I think would work to fix this issue is 
 have the title of the players playing against one another fixed at the location using absolute positioning. 
@@ -120,6 +128,7 @@ setup for that function. But that still never worked. So I made a hotfix by addi
 emit only once to send back info to the client.
 
 ### Technical Issues
+---
 1) One challenge that I faced during the emits between the python and javascript files was when I was sending a json data to App.js from app.py. I had created a python 
 dictionary mapping the usernames to their respecitive scores. So essentially the keys as the names and values as the scores. The problem arose when I wanted to send this data 
 from `app.py to App.js`. React kept on giving me "objects are not valid as a react child use an array instead". The mistake that I was making was that I needed to format the 
