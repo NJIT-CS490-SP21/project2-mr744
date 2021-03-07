@@ -50,7 +50,6 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
-    print("The request id is : " + str(request.sid))
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -59,7 +58,8 @@ def on_disconnect():
 
     if request.sid in user_dict:
         if(user_dict[request.sid][1] <= 2):
-            user_dict = {}
+            user_dict.clear()
+            leaderboard.clear()
             users_list.clear()
             id_count = 1
             socketio.emit('disconnect', {'users_list':users_list})
@@ -71,7 +71,6 @@ def on_disconnect():
 # 'chat' is a custom event name that we just decided
 @socketio.on('move')
 def on_chat(data): # data is whatever arg you pass in your emit call on client
-    print(str(data))
 
     socketio.emit('move',  data, broadcast=True, include_self=False)
 
@@ -82,7 +81,7 @@ def on_players(data):
     #check if username is already in database, if so no need to add them again
     #first query whole table
     query_player = models.Players.query.filter_by(username=data['username']).first()
-    print(query_player)
+
     #player not in db, then add them
     if query_player == None:
         new_player = models.Players(username=data['username'], score=100)
@@ -105,32 +104,15 @@ def on_players(data):
 
     data ={'user_dict': user_dict, 'users': users_list}
     
-    print(models.Players.query.all())
-    
-    
     #query the leaderboard by order
     ordered_list = models.Players.query.order_by(desc(models.Players.score)).all()
-    print(ordered_list)
-    # a1_sorted_keys = sorted(a1, key=oe.get, reverse=True)
-    
+
     for user in ordered_list:
         leaderboard[user.username] = user.score
-        # leaderboard.append([user.username,user.score])
-            
-    # a1_sorted_keys = sorted(leaderboard, key=leaderboard.get, reverse=True)
-    
-    print(leaderboard)
-    # cd = sorted(d.items(),key=operator.itemgetter(1),reverse=True)
 
-    # print("the dictionary: ")    
-    # print(a1_sorted_keys)
-    
     data['leaderboard'] = json.dumps(leaderboard, sort_keys=False)
     
-    print(data['leaderboard'])
-
     socketio.emit('login', data, broadcast=True, include_self=True, room=room)
-    
     
 @socketio.on('turn')
 def on_next_turn(data):
@@ -177,7 +159,6 @@ def on_next_turn(data):
         print("Sending ")
         data['able'] = True
     
-
         print("Sending!")
         #emit the playerId and if it is their turn
         socketio.emit('turn', data, broadcast=True, include_self=False)

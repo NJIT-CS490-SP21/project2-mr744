@@ -5,9 +5,6 @@ export function LeaderBoard(props){
     let items = [];
     let count = 1;
     for(const [key, value] of Object.entries(props.leader)){
-        console.log(key);
-        console.log(value);
-        console.log("The username:" + props.user)
         if(props.user === key)
             items.push(<tr className="select-user"index={count}> <td> {count}</td>   <td> {key}</td> <td>{value} </td>  </tr>);
         else 
@@ -19,10 +16,6 @@ export function LeaderBoard(props){
     function onClickLeader(){
         props.setLead(prev => !prev);
     }
-    
-    
-    
-    
     
     return (
             <div>

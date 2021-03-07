@@ -131,12 +131,6 @@ function App() {
         setPlayId(id => data.user_dict[socket.id][1])
         setPlayers(users => [...data.users]);
         //update leaderboard
-        console.log("the leaders: "  + data.leaderboard[0]);
-        console.log(typeof  data.leaderboard);
-        
-        console.log(typeof JSON.parse(JSON.stringify(data.leaderboard)));
-        
-        
         setLeader(scoreBoard => JSON.parse(data.leaderboard));
         
     });
@@ -242,13 +236,6 @@ function App() {
       
     }
     
-    console.log("The leader is: " + leader['Mihir']);
-    console.log("The leader is: " + JSON.stringify(leader));
-    console.log("The leader is: " + Object.values(leader));
-    console.log("The leader is: " + Object.keys(leader));
-    console.log(typeof JSON.stringify(leader));
-  //use this line of code for debugging purposes        
-  // <div> Player number { currPlayers } { playerId }, Is Active: { activePlayer + ""} </div>  
   return (
     <div>
       <div className="title-div">
