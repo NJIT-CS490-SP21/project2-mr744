@@ -1,4 +1,4 @@
-# Tic Tac Toe Multiplayer Game
+# Tic Tac Toe Multiplayer Game (Updated for Milestone 2)
 
 This respository consists of python, javascript, html, and css files which will allow users to play a game of Tic Tac Toe 
 between 2 players when two instances of the tab are opened. Additional players joining will be spectators.
@@ -73,20 +73,28 @@ Heroku is a cloud platform company which will essentially allow us to host our c
   4. Now we will push our code to heroku: `git push heroku main`
 
 ### Known Problems
-1) One issue is that when players join the game in the middle of the match. The board is not updated for them, and the board starts to become buggy for them. One way I think I 
-could address this issue is by emitting the board to user when they log in. I could essentially do this by storing the most current version of the board on 
-python server and then send the board to the user.
-2) The events of disconnecting don't get synchronized for a while. Meaning that when all the users close their tabs or when they all refresh the page, the previous users from 
-the last match are still shown for a while until they get disconnected. But this can last for about 10 seconds to a minute at times and effectively makes the game state buggy as
-we don't know who is the first player. This effectively disables the game for everyone and the board is not useable at all. One way I think I would fix this is if I sped up the 
-polling frequency between the client and servers.
+1) One issue that I have is the styling with the CSS. When implementing the Leaderboard button to show the scores of the users on the UI, I would have an issue where the title
+of the players playing against one another would get pushed out of the center of the screen and to the left handside. One method that I think would work to fix this issue is 
+have the title of the players playing against one another fixed at the location using absolute positioning. 
+
+2) Another issue that I had, which was having to deal with the python server was that one of the socket functions was receiving duplicate messages twice from a single client.
+To checkout what was going on, I had basically console logged and printed everywhere in the javascript and python files. I found out that my client was only sending one emit 
+message despite the python server recieiving two. I checked online, and stackoverflow said that I may have something wrong with the rooms, so I deleted the rooms that I had 
+setup for that function. But that still never worked. So I made a hotfix by adding an if statement with a counter to only allow the function to excute twice but this time to 
+emit only once to send back info to the client.
 
 ### Technical Issues
-1) One of the biggest challenges I have faced during this assignment was that the states for either the userlist or the board were not updating properly. I was incorrectly 
-updating the state. I was basically placing my new values inside the update variable of the useState function. I realized my error once I watched [Web Dev Simplified]
-(https://www.youtube.com/watch?v=O6P86uwfdR0) on Youtube and reading the [Docs](https://reactjs.org/docs/hooks-state.html).
-2) Another issue that I faced but was able to solve was when it was a players turn they were able to click on a tile on the board even if it was clicked previously. This caused
-the player to lose their turn and waste it at the same time. My first instinct was to check if the board was updating fine and then I realized that it wasn't. The players on the
-next tab were able to see the board but then one board was overwritten by another. I realized my error was because I did not consider that I needed to check if the board at that 
-tile was already filled. So when I realized that, I just placed a "if else" statements to make sure that the players turn did not get used up even if they clicked a repeated 
-tile on the board.
+1) One challenge that I faced during the emits between the python and javascript files was when I was sending a json data to App.js from app.py. I had created a python 
+dictionary mapping the usernames to their respecitive scores. So essentially the keys as the names and values as the scores. The problem arose when I wanted to send this data 
+from `app.py to App.js`. React kept on giving me "objects are not valid as a react child use an array instead". The mistake that I was making was that I needed to format the 
+dictionary from the python file. I used this [post](https://stackoverflow.com/questions/10844064/items-in-json-object-are-out-of-order-using-json-dumps) from stack overflow to 
+guide me. I essentially needed to used `json.dumps(dictionary_name,sort_keys=False)` on the server side before sending the data. And on the client side, when recieving the 
+dictionary I neede to use `JSON.parse(dictionary_name)` in the App.js. This was neede to maintain the structure of the dictionary from python to javascript.
+
+2) One simple mistake that I made but one which took hours to fix was deploying my code to heroku. I kept on getting the error `no module named flask`. My first instinct was to 
+check my `requirements.txt` file to ensure it had the flask module. And gladly it did. Then the next step I took was to reinstall the flask module. I repeated this a couple of 
+times and it still hadn't worked. So then I removed my git heroku remote and tried building the project again. This step still didn't work. So finally, I asked a friend for help
+and they asked me to check if I had installed the buildpacks on the heroku. I went to the website and to my suprise I never had installed that. So once I installed that, I was 
+already to go. It was such an overlooked mistake by one that cost me hours.
+
+
