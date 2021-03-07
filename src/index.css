@@ -70,6 +70,10 @@ code {
   border:0;
   border-radius:0.2rem;
 }
+.submit-bttn:hover{
+  color:white;
+  background-color:#5bc0de;
+}
 
 
 
@@ -86,6 +90,11 @@ code {
   border-radius:0.2rem;
   
 }
+.again:hover{
+  color:white;
+  background-color:#5bc0de;
+}
+
 .again span{
   font-size: 1.2rem;
   color: #40514e;
@@ -113,15 +122,16 @@ code {
   color:white;
   
 }
+
+.users span{
+  color:yellow;
+}
 .users1{
   display: inline-block;
   background-color: #aa96da;
   padding:1rem;
   border-radius:0.5rem;
   color:white;
-  position: relative;
-  right: 2.75rem;
-  
 }
 
 .results{
@@ -219,6 +229,16 @@ code {
   border:0;
   border-radius:0.2rem;
   font-size:1.25rem;
+}
+
+.no-leader:hover{
+  color:white;
+  background-color:#5cb85c;
+  
+}
+.show-leader:hover{
+  color:white;
+  background-color:#5cb85c;
 }
 
 .select-user{

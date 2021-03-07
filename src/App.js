@@ -259,7 +259,7 @@ function App() {
         <>
       
         <div className="players"> 
-          <div><h2 className="users">Welcome, { userName }!</h2></div>
+          <div><h2 className="users">Welcome, <span>{ userName }</span>!</h2></div>
           <div> <h2 className="users1"> <span class={ active1}>{currPlayers[0]}</span> vs. <span class={active2}>{ currPlayers[1]} </span></h2> </div>
           <LeaderBoard leader={leader} setLead={ setLead } showLead={showLead} user={userName} />
         </div>
