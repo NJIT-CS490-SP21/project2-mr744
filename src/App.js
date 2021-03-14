@@ -134,7 +134,6 @@ function App() {
         setLeader(scoreBoard => JSON.parse(data.leaderboard));
         
     });
-
     socket.on('turn', (data) =>{
         setSymbol(symbol=> data.boardVal);
         setPlayId(id => {
