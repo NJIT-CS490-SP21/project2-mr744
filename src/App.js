@@ -240,7 +240,7 @@ function App() {
   return (
     <div>
       <div className="title-div">
-        <h1 className="title"> Tic Tac Toe</h1>
+        <h1 className="title"> Tic Tac Woe</h1>
       </div>
       
       {view ? (
