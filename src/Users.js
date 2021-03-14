@@ -17,8 +17,8 @@ export function User(props) {
                   </div>
                 </div>
               );
-              
-              return elem;
+            else
+              return "";
           })}
         </ul>
       </div>
