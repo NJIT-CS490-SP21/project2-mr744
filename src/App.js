@@ -32,6 +32,8 @@ function App() {
       let value = '';
       let valid = true;
 
+
+
       setActive( currAct =>{  
         
         //only the active player can update the board
