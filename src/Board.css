@@ -1,25 +1,25 @@
 .board {
-	width: 300px; /* Total horizontal dimensions */
-	height: 300px; /* Total vertical dimensions */
-	display: grid; /* Enables CSS Grid */
-	margin: 0 auto;
-	border: 6px solid #2c3e50;
-	border-radius:10px;
-	color:#fff;
+  width: 300px; /* Total horizontal dimensions */
+  height: 300px; /* Total vertical dimensions */
+  display: grid; /* Enables CSS Grid */
+  margin: 0 auto;
+  border: 6px solid #2c3e50;
+  border-radius: 10px;
+  color: #fff;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
 }
 
 .box {
   border: 6px solid #2c3e50;
-  text-align:center;
+  text-align: center;
 }
 
-.pieces{
-	text-align:center;
+.pieces {
+  text-align: center;
 }
 
-.board-outline{
-	background-color: #34495e;
-	padding: 1rem;
-	border-radius: 0.4rem;
+.board-outline {
+  background-color: #34495e;
+  padding: 1rem;
+  border-radius: 0.4rem;
 }

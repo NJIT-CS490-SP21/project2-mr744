@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,242 +10,224 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-.title{
+.title {
   display: inline-block;
   background-color: #393e46;
   padding: 2rem;
   border-radius: 1.25rem;
-  color:#EEEEEE;
-  
+  color: #eeeeee;
 }
 
-.title-div{
-  display:flex;
-  justify-content:center;
- 
+.title-div {
+  display: flex;
+  justify-content: center;
 }
 
-.login-box{
+.login-box {
   /*text-align:center;*/
-  display:flex;
-  justify-content:center;
-  
+  display: flex;
+  justify-content: center;
 }
 
-.inner{
+.inner {
   display: inline-block;
-  text-align:center;
-  background-color:#00adb5;
+  text-align: center;
+  background-color: #00adb5;
   padding: 4rem;
   border-radius: 1.2rem;
-  
 }
 
-.user-name{
+.user-name {
   /*text-align:center;*/
 }
-.enter-name{
- color:#222831;
+.enter-name {
+  color: #222831;
 }
 
-.input{
-    padding: 0.2rem;
-    border-radius: 0.3rem;
+.input {
+  padding: 0.2rem;
+  border-radius: 0.3rem;
 }
 
-.submit{
+.submit {
   /*text-align: center;*/
   padding-top: 2rem;
-
 }
 
-.submit-bttn{
+.submit-bttn {
   padding: 0.4rem 1.5rem;
-  background-color:#f9ed69;
-  text-decoration:none;
-  border:0;
-  border-radius:0.2rem;
+  background-color: #f9ed69;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.2rem;
 }
-.submit-bttn:hover{
-  color:white;
-  background-color:#5bc0de;
+.submit-bttn:hover {
+  color: white;
+  background-color: #5bc0de;
 }
 
-
-
-.submit-bttn span{
+.submit-bttn span {
   font-size: 1.2rem;
   color: #40514e;
 }
 
-.again{
+.again {
   padding: 0.4rem 1.5rem;
-  background-color:#f9ed69;
-  text-decoration:none;
-  border:0;
-  border-radius:0.2rem;
-  
+  background-color: #f9ed69;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.2rem;
 }
-.again:hover{
-  color:white;
-  background-color:#5bc0de;
+.again:hover {
+  color: white;
+  background-color: #5bc0de;
 }
 
-.again span{
+.again span {
   font-size: 1.2rem;
   color: #40514e;
 }
 
-.center-board{
-    display: flex;
-    justify-content: space-around;
-    margin-bottom:2rem;
+.center-board {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 2rem;
 }
 
-.players{
+.players {
   /*text-align:center;*/
   display: flex;
   justify-content: space-evenly;
-  
-
 }
 
-.users{
+.users {
   display: inline-block;
   background-color: #aa96da;
-  padding:1rem;
-  border-radius:0.5rem;
-  color:white;
-  
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
 }
 
-.users span{
-  color:yellow;
+.users span {
+  color: yellow;
 }
-.users1{
+.users1 {
   display: inline-block;
   background-color: #aa96da;
-  padding:1rem;
-  border-radius:0.5rem;
-  color:white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
 }
 
-.results{
+.results {
   background-color: #00fff0;
-  padding:1rem;
-  border-radius:0.4rem;
+  padding: 1rem;
+  border-radius: 0.4rem;
   width: 14rem;
   height: 20.25rem;
-  text-align:center;
+  text-align: center;
 }
 
-.spectators{
+.spectators {
   background-color: #048998;
-  border-radius:0.4rem;
+  border-radius: 0.4rem;
   width: 16rem;
   height: 22.25rem;
 }
 
-.spectators h2,h3{
-  text-align:center;
+.spectators h2,
+h3 {
+  text-align: center;
 }
-.spectators h2{
-  color:#ffde7d;
-  margin-bottom:0;
-}
-
-.spectators h3{
-  color:white;
-}
-.viewers{
-  display:flex;
-  justify-content:center;
-  position:relative;
-  right:1.25rem;
+.spectators h2 {
+  color: #ffde7d;
+  margin-bottom: 0;
 }
 
-.viewers ul{
-  margin-top:0;
-  color:#2EB67D;
+.spectators h3 {
+  color: white;
+}
+.viewers {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  right: 1.25rem;
 }
 
-.show{
-    background-color: #f9ed69;
-    color:black;
-    border-radius: 0.4rem;
-    padding: 0.2rem;
-    
+.viewers ul {
+  margin-top: 0;
+  color: #2eb67d;
 }
 
-.no-show{
-  
+.show {
+  background-color: #f9ed69;
+  color: black;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
 }
 
-.leader-board{
-    color: white;
-    background-color: #34495e;
-    border-radius: 0.3rem;
-    margin-bottom: 1rem;
-    padding: 2rem;
-    position:relative;
-    left:10rem;
-}
-.no-leader-board{
-    color: white;
-    background-color: #34495e;
-    border-radius: 0.3rem;
-    padding: 1rem;
-    position:relative;
-    left:7rem;
-    top:1rem;
+.no-show {
 }
 
-.leader-board td{
+.leader-board {
+  color: white;
+  background-color: #34495e;
+  border-radius: 0.3rem;
+  margin-bottom: 1rem;
+  padding: 2rem;
+  position: relative;
+  left: 10rem;
+}
+.no-leader-board {
+  color: white;
+  background-color: #34495e;
+  border-radius: 0.3rem;
+  padding: 1rem;
+  position: relative;
+  left: 7rem;
+  top: 1rem;
+}
+
+.leader-board td {
   padding: 0.5rem 2rem;
-  text-align:center;
-  font-size:1rem;
+  text-align: center;
+  font-size: 1rem;
 }
 
-
-.show-leader{
+.show-leader {
   padding: 0.4rem 1.5rem;
-  background-color:#f9ed69;
-  text-decoration:none;
-  border:0;
-  border-radius:0.2rem;
-  font-size:1.25rem;
+  background-color: #f9ed69;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.2rem;
+  font-size: 1.25rem;
   position: relative;
   left: 3.75rem;
   bottom: 1rem;
 }
-.no-leader{
+.no-leader {
   padding: 0.4rem 1.5rem;
-  background-color:#f9ed69;
-  text-decoration:none;
-  border:0;
-  border-radius:0.2rem;
-  font-size:1.25rem;
+  background-color: #f9ed69;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.2rem;
+  font-size: 1.25rem;
 }
 
-.no-leader:hover{
-  color:white;
-  background-color:#5cb85c;
-  
+.no-leader:hover {
+  color: white;
+  background-color: #5cb85c;
 }
-.show-leader:hover{
-  color:white;
-  background-color:#5cb85c;
-}
-
-.select-user{
-    color: black;
-    background-color: lightgray;
+.show-leader:hover {
+  color: white;
+  background-color: #5cb85c;
 }
 
-
-
-
+.select-user {
+  color: black;
+  background-color: lightgray;
+}
