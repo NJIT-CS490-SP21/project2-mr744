@@ -94,6 +94,9 @@ def on_players(data):
         new_player = models.Players(username=data['username'], score=100)
         db.session.add(new_player)
         db.session.commit()
+        # USERS_LIST = add_player(data['username'], 100)
+        
+        
 
     is_active = False
 
@@ -111,18 +114,38 @@ def on_players(data):
 
     data = {'user_dict': USER_DICT, 'users': USERS_LIST}
 
-    #query the LEADERBOARDby order
+    #query the LEADERBOARD by order
     ordered_list = models.Players.query.order_by(desc(
         models.Players.score)).all()
 
     for user in ordered_list:
         LEADERBOARD[user.username] = user.score
+    
+    # LEADERBOARD = get_leader_board()    
 
     data['leaderboard'] = json.dumps(LEADERBOARD, sort_keys=False)
 
     socketio.emit('login', data, broadcast=True, include_self=True, room=room)
+    
+    
+# def add_player(username, score):
+#     '''setting up function to add players into the db'''
+#     new_player = models.Players(username=username,score=score)
+#     db.session.add(new_player)
+#     db.session.commit()
+    
+def get_leader_board():
+      #query the LEADERBOARD by order
+    ordered_list = models.Players.query.order_by(desc(
+        models.Players.score)).all()
 
-
+    leaderboard= {}
+    for user in ordered_list:
+        leaderboard[user.username] = user.score
+        
+    return leaderboard
+    
+    
 @socketio.on('turn')
 def on_next_turn(data):
     '''keep track of whose turn it is '''
