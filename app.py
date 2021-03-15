@@ -97,7 +97,6 @@ def on_players(data):
         # USERS_LIST = add_player(data['username'], 100)
         
         
-
     is_active = False
 
     if ID_COUNT == 1:

@@ -23,6 +23,18 @@ class AddUserTestCase(unittest.TestCase):
                 # KEY_EXPECTED: [INITIAL_USERNAME, 'naman'],
                 KEY_EXPECTED: {INITIAL_USERNAME: 100, 'naman':100 },
             },
+            {
+                KEY_INPUT: 'naman',
+                # KEY_EXPECTED: [INITIAL_USERNAME, 'naman'],
+                KEY_EXPECTED: {INITIAL_USERNAME: 100, 'naman':100 },
+                
+            },
+            {
+                KEY_INPUT: 'naman',
+                # KEY_EXPECTED: [INITIAL_USERNAME, 'naman'],
+                KEY_EXPECTED: {INITIAL_USERNAME: 100, 'naman':100 },
+                
+            },
         ]
         
         # initial_person = models.Person(username=INITIAL_USERNAME, email='{0}@stuff.com'.format(INITIAL_USERNAME))
@@ -36,6 +48,7 @@ class AddUserTestCase(unittest.TestCase):
     #     pass
     
     def mocked_person_query_all(self):
+    
         return self.initial_db_mock
     
     def test_success(self):
