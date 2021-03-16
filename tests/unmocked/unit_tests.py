@@ -19,11 +19,6 @@ KEY_FIRST_WORD = "first_word"
 KEY_SECOND_WORD = "second_word"
 KEY_ARR = "the_arr"
 
-# "String1 String2 String3".split() => ['String1', 'String2', 'String3']
-
-# (1) => emptylist
-# (2) => emptylist
-# (3) => no effect
 
 class ClearListOnDisconnectCase(unittest.TestCase):
     def setUp(self):
@@ -35,7 +30,7 @@ class ClearListOnDisconnectCase(unittest.TestCase):
             },
             {
                 KEY_INPUT: 2,
-                KEY_ARR: ['Mihir','Bob','Alice','Job'],
+                KEY_ARR: ['Mihir','Bob','Alice'],
                 KEY_EXPECTED: [],
             },
             {
@@ -50,9 +45,9 @@ class ClearListOnDisconnectCase(unittest.TestCase):
         for test in self.success_test_params:
             # actual_result = test[KEY_INPUT].split()
             actual_result = clear_on_id(test[KEY_INPUT],test[KEY_ARR])
-            print(f"The actual one is: {actual_result}")
+            print(f"Actual: {actual_result}")
             expected_result = test[KEY_EXPECTED]
-            print(f"The expect one is: {expected_result}")
+            print(f"Expected: {expected_result}")
             self.assertEqual(len(actual_result), len(expected_result))
             self.assertEqual(actual_result, expected_result)
 
@@ -85,9 +80,9 @@ class OnJoinCase(unittest.TestCase):
         for test in self.success_test_params:
 
             actual_result = on_user_join(test[KEY_INPUT],test[KEY_ARR])
-            print(f"The actual one is: {actual_result}")
+            print(f"Actual: {actual_result}")
             expected_result = test[KEY_EXPECTED]
-            print(f"The expect one is: {expected_result}")
+            print(f"Expected: {expected_result}")
             self.assertEqual(len(actual_result), len(expected_result))
             self.assertEqual(actual_result, expected_result)
 

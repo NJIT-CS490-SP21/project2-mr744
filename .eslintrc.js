@@ -18,18 +18,16 @@ module.exports = {
   },
   plugins: [
     'react',
-    'import'
+    'import',
+    // 'testing-library',
   ],
   rules: {
-        "react/no-array-index-key": "off",
-        "react-hooks/exhaustive-deps": "off",
-        "react/react-in-jsx-scope": "off",
-        // "import/prefer-default-export": "off",
-        "no-restricted-syntax": "off",
+        "react/no-array-index-key": "off", //fine
+        "react-hooks/exhaustive-deps": "off", //fine
+        // "react/react-in-jsx-scope": "off", // comment this one out
+        // "no-restricted-syntax": "off", // iterators generators 
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "no-unused-vars": "off",
-        // "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-        // "import/no-extraneous-dependencies": "off",
-        "no-undef": "off",
+        // "no-unused-vars": "off", // comment this one out
+        "no-undef": "off", //comment this one out
   },
 };

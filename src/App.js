@@ -1,6 +1,6 @@
 import './App.css';
 import './Board.css';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import Board from './Board';
 import User from './Users';
