@@ -2,16 +2,16 @@ import './App.css';
 import './Board.css';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
-import { Board } from './Board';
-import { User } from './Users';
-import { Result } from './Result';
-import { LeaderBoard } from './LeaderBoard';
+import Board from './Board';
+import User from './Users';
+import Result from './Result';
+import LeaderBoard from './LeaderBoard';
 
 const socket = io();
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [currPlayers, setPlayers] = useState([]); // initial array is empty since we don't know how many players will join
+  const [currPlayers, setPlayers] = useState([]); // initial array is empty
   const inputRef = useRef(null); // get user input
   const [userName, setUser] = useState(null); // for username
   const [view, setView] = useState(false); // show board
@@ -22,6 +22,30 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [symbol, setSymbol] = useState('');
   const [leader, setLeader] = useState({});
+
+  function calculateWinner(squares) {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i += 1) {
+      const [a, b, c] = lines[i];
+      if (
+        squares[a]
+        && squares[a] === squares[b]
+        && squares[a] === squares[c]
+      ) {
+        return squares[a];
+      }
+    }
+    return null;
+  }
 
   function updateBoard(arrIndex) {
     let value = '';
@@ -52,7 +76,7 @@ function App() {
                   calculateWinner(tempBoard) === 'X'
                   || calculateWinner(tempBoard) === 'O'
                 ) {
-                  console.log('Sending message winner!');
+                  // console.log('Sending message winner!');
                   socket.emit('turn', {
                     can_turn: 'able',
                     status: 1,
@@ -79,7 +103,7 @@ function App() {
                 status: 0,
                 boardVal: value,
               });
-              setSymbol((symbol) => value);
+              setSymbol((symbol1) => value);
             }
 
             socket.emit('move', { arrIndex, boardVal: value });
@@ -128,15 +152,15 @@ function App() {
       setLeader((scoreBoard) => JSON.parse(data.leaderboard));
     });
     socket.on('turn', (data) => {
-      setSymbol((symbol) => data.boardVal);
+      setSymbol((symbol1) => data.boardVal);
       setPlayId((id) => {
-        console.log(id);
+        // console.log(id);
         if (id < 3) setActive((prevActive) => data.able);
         return id;
       });
 
       if (data.status === 1) {
-        console.log(`The winner is: ${data.game}`);
+        // console.log(`The winner is: ${data.game}`);
         setWinner((win) => data.game);
         setLeader((scoreBoard) => JSON.parse(data.leaderboard));
       }
@@ -147,8 +171,8 @@ function App() {
     });
 
     socket.on('replay', (data) => {
-      setWinner((prevWinner) => null);
-      setBoard((board) => data.board);
+      setWinner((prevWinner1) => null);
+      setBoard((board1) => data.board);
       setResults((res) => false);
       setPlayId((id) => {
         if (id === 1) setActive((prev) => true);
@@ -160,7 +184,7 @@ function App() {
 
   function onReplay() {
     // reset the board
-    setBoard((board) => Array(9).fill(null));
+    setBoard((board1) => Array(9).fill(null));
     setWinner((prevWinner) => null);
 
     // reset the active players
@@ -177,35 +201,11 @@ function App() {
     });
   }
 
-  function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (
-        squares[a]
-        && squares[a] === squares[b]
-        && squares[a] === squares[c]
-      ) {
-        return squares[a];
-      }
-    }
-    return null;
-  }
-
-  // if they can see the board that means that they are logged in and only then show the button to play again
+  // if they can see the board that means that they are logged in and only then
   let button = '';
   if (view && (playerId === 1 || playerId === 2)) {
     button = (
-      <button className="again" onClick={() => onReplay()}>
+      <button type="button" className="again" onClick={() => onReplay()}>
         <span>Play Again!</span>
       </button>
     );
@@ -216,7 +216,7 @@ function App() {
   let active1;
   let active2 = '';
   if (!results) {
-    console.log(symbol);
+    // console.log(symbol);
     if (symbol === 'X') {
       active1 = 'no-show';
       active2 = 'show';
@@ -274,7 +274,7 @@ function App() {
 
             <Board updateBoard={updateBoard} board={board} />
 
-            <User players={currPlayers} activePlayer={activePlayer} />
+            <User players={currPlayers} />
           </div>
         </>
       ) : (
@@ -286,7 +286,7 @@ function App() {
                 <input className="input" ref={inputRef} type="text" />
               </div>
               <div className="submit">
-                <button className="submit-bttn" onClick={() => onLogin()}>
+                <button type="button" className="submit-bttn" onClick={() => onLogin()}>
                   <span>Login</span>
                 </button>
               </div>

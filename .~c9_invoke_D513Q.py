@@ -89,16 +89,13 @@ def on_players(data):
     query_player = models.Players.query.filter_by(
         username=data['username']).first()
 
-    print(query_player)
     #player not in db, then add them
     if query_player is None:
         # new_player = models.Players(username=data['username'], score=100)
         # db.session.add(new_player)
         # db.session.commit()
-        new_player = models.Players(username=data['username'],score=100)
+        new_player = models.Players(username=username,score=score)
         LEADERBOARD = add_player(new_player)
-        print("here")
-        print(LEADERBOARD)
         # USERS_LIST = add_player(data['username'], 100)
         
         
@@ -117,16 +114,14 @@ def on_players(data):
     data = {'user_dict': USER_DICT, 'users': USERS_LIST}
 
     # #query the LEADERBOARD by order
-    if LEADERBOARD == {}:
-        ordered_list = models.Players.query.order_by(desc(
-            models.Players.score)).all()
-    
-        for user in ordered_list:
-            LEADERBOARD[user.username] = user.score
+    # ordered_list = models.Players.query.order_by(desc(
+    #     models.Players.score)).all()
+
+    # for user in ordered_list:
+    #     LEADERBOARD[user.username] = user.score
     
     # LEADERBOARD = get_leader_board()    
     # LEADERBOARD = add_player(data['username'],score=100)
-    print(f"The board is: {LEADERBOARD}")
 
     data['leaderboard'] = json.dumps(LEADERBOARD, sort_keys=False)
 
@@ -138,23 +133,47 @@ def add_player(new_player):
     
     db.session.add(new_player)
     db.session.commit()
-
-    ordered_list = my_order_by()
+    # the_desc = str(models.Players.score)
+    ordered_list = models.Players.query.order_by(desc(
+        models.Players.score)).all()
     
-    return get_leader(ordered_list)
+    # ordered_list = models.Players.query.order_by(models.Players.score).all()
+    
+    # leaderboard = {}
+    # for user in ordered_list:
+    #     leaderboard[user.username] = user.score
+    
+    return get_leader(my_order_by())
+    # return leaderboard
     
 def my_order_by():
     ordered_list = models.Players.query.order_by(desc(models.Players.score)).all()
     return ordered_list
     
-
+    
+    
+    
+    
+    
 def get_leader(query_result):
     leaderboard = {}
-    print(query_result)
     for user in query_result:
         leaderboard[user.username] = user.score
         
     return leaderboard
+    
+    
+# def get_leader_board():
+#       #query the LEADERBOARD by order
+#     ordered_list = models.Players.query.order_by(desc(
+#         models.Players.score)).all()
+
+#     leaderboard= {}
+#     for user in ordered_list:
+#         leaderboard[user.username] = user.score
+        
+#     return leaderboard
+    
     
 @socketio.on('turn')
 def on_next_turn(data):

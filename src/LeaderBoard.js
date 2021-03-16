@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export function LeaderBoard(props) {
+function LeaderBoard({
+  leader, setLead, showLead, user,
+}) {
   const items = [];
   let count = 1;
-  for (const [key, value] of Object.entries(props.leader)) {
-    if (props.user === key) {
+  for (const [key, value] of Object.entries(leader)) {
+    if (user === key) {
       items.push(
         <tr className="select-user" index={count}>
           {' '}
@@ -48,19 +51,19 @@ export function LeaderBoard(props) {
       );
     }
 
-    count++;
+    count += 1;
   }
 
   function onClickLeader() {
-    props.setLead((prev) => !prev);
+    setLead((prev) => !prev);
   }
 
   return (
     <div>
-      {props.showLead ? (
+      {showLead ? (
         <>
           <div className="leader-board">
-            <button onClick={() => onClickLeader()} className="show-leader">
+            <button type="button" onClick={() => onClickLeader()} className="show-leader">
               {' '}
               <span>Leaderboard</span>
               {' '}
@@ -82,7 +85,7 @@ export function LeaderBoard(props) {
         <>
           {' '}
           <div className="no-leader-board">
-            <button onClick={() => onClickLeader()} className="no-leader">
+            <button type="button" onClick={() => onClickLeader()} className="no-leader">
               <span>Leaderboard </span>
             </button>
           </div>
@@ -91,3 +94,19 @@ export function LeaderBoard(props) {
     </div>
   );
 }
+
+LeaderBoard.defaultProps = {
+  leader: PropTypes.objectOf(PropTypes.object),
+  setLead: PropTypes.bool,
+  showLead: PropTypes.bool,
+  user: PropTypes.string,
+};
+LeaderBoard.propTypes = {
+  leader: PropTypes.objectOf(PropTypes.object),
+  setLead: PropTypes.bool,
+  showLead: PropTypes.bool,
+  user: PropTypes.string,
+
+};
+
+export default LeaderBoard;

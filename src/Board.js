@@ -1,19 +1,35 @@
 import React from 'react';
-import { Box } from './Box.js';
+import PropTypes from 'prop-types';
+import Box from './Box';
 
-export function Board(props) {
+function Board({ updateBoard, board }) {
+  // const [board, updateBoard] = props;
+
   return (
     <div className="board-outline">
       <div className="board">
-        {props.board.map((elem, index) => (
+        {board.map((elem, index) => (
           <Box
             key={index}
             index={index}
-            updateBoard={props.updateBoard}
-            board={props.board}
+            updateBoard={updateBoard}
+            board={board}
           />
         ))}
       </div>
     </div>
   );
 }
+
+Board.defaultProps = {
+  board: PropTypes.instanceOf(Array),
+  updateBoard: PropTypes.instanceOf(Array),
+
+};
+Board.propTypes = {
+  // board: PropTypes.arrayOf(PropTypes.string),
+  board: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string])),
+  updateBoard: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string])),
+  // updateBoard: PropTypes.arrayOf(PropTypes.string),
+};
+export default Board;

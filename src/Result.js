@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export function Result(props) {
-  console.log(props.winner);
+function Result({ result, button, winner }) {
   let text = '';
-  if (props.winner !== '') text = 'The winner is: ';
+  if (winner !== '') text = 'The winner is: ';
   else {
     text = 'The Game ended in a draw';
   }
@@ -12,7 +12,7 @@ export function Result(props) {
   return (
     <div className="results">
       <h2> Game Result </h2>
-      {props.result ? (
+      {result ? (
         <>
           <div>
             {' '}
@@ -20,12 +20,12 @@ export function Result(props) {
               {' '}
               {text}
               {' '}
-              {props.winner}
+              {winner}
               !
             </h2>
             {' '}
           </div>
-          {props.button}
+          {button}
         </>
       ) : (
         <>
@@ -35,3 +35,17 @@ export function Result(props) {
     </div>
   );
 }
+
+Result.defaultProps = {
+  result: PropTypes.bool,
+  button: PropTypes.string,
+  winner: PropTypes.string,
+};
+Result.propTypes = {
+  result: PropTypes.bool,
+  button: PropTypes.string,
+  winner: PropTypes.string,
+
+};
+
+export default Result;

@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export function User(props) {
+function User({ players }) {
   return (
     <div className="spectators">
       <h2> Spectators </h2>
       <div className="viewers">
         <ul>
-          {props.players.map((elem, index) => {
+          {players.map((elem, index) => {
             if (index > 1) {
               return (
                 <div key={index} index={index}>
@@ -29,3 +30,12 @@ export function User(props) {
     </div>
   );
 }
+
+User.defaultProps = {
+  players: PropTypes.instanceOf(Array),
+};
+User.propTypes = {
+  players: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string])),
+};
+
+export default User;
