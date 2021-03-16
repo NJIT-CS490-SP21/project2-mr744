@@ -1,23 +1,52 @@
-import React from "react";
+import React from 'react';
 
 export function LeaderBoard(props) {
-  let items = [];
+  const items = [];
   let count = 1;
   for (const [key, value] of Object.entries(props.leader)) {
-    if (props.user === key)
+    if (props.user === key) {
       items.push(
         <tr className="select-user" index={count}>
-          {" "}
-          <td> {count}</td> <td> {key}</td> <td>{value} </td>{" "}
-        </tr>
+          {' '}
+          <td>
+            {' '}
+            {count}
+          </td>
+          {' '}
+          <td>
+            {' '}
+            {key}
+          </td>
+          {' '}
+          <td>
+            {value}
+            {' '}
+          </td>
+          {' '}
+        </tr>,
       );
-    else
+    } else {
       items.push(
         <tr index={count}>
-          {" "}
-          <td> {count}</td> <td> {key}</td> <td>{value} </td>{" "}
-        </tr>
+          {' '}
+          <td>
+            {' '}
+            {count}
+          </td>
+          {' '}
+          <td>
+            {' '}
+            {key}
+          </td>
+          {' '}
+          <td>
+            {value}
+            {' '}
+          </td>
+          {' '}
+        </tr>,
       );
+    }
 
     count++;
   }
@@ -32,8 +61,9 @@ export function LeaderBoard(props) {
         <>
           <div className="leader-board">
             <button onClick={() => onClickLeader()} className="show-leader">
-              {" "}
-              <span>Leaderboard</span>{" "}
+              {' '}
+              <span>Leaderboard</span>
+              {' '}
             </button>
 
             <table>
@@ -50,7 +80,7 @@ export function LeaderBoard(props) {
         </>
       ) : (
         <>
-          {" "}
+          {' '}
           <div className="no-leader-board">
             <button onClick={() => onClickLeader()} className="no-leader">
               <span>Leaderboard </span>

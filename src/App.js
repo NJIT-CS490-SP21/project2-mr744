@@ -1,36 +1,36 @@
-import "./App.css";
-import "./Board.css";
-import { Board } from "./Board.js";
-import { User } from "./Users.js";
-import { Result } from "./Result.js";
-import { useState, useRef, useEffect } from "react";
-import io from "socket.io-client";
-import { LeaderBoard } from "./LeaderBoard.js";
+import './App.css';
+import './Board.css';
+import { useState, useRef, useEffect } from 'react';
+import io from 'socket.io-client';
+import { Board } from './Board';
+import { User } from './Users';
+import { Result } from './Result';
+import { LeaderBoard } from './LeaderBoard';
 
 const socket = io();
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [currPlayers, setPlayers] = useState([]); //initial array is empty since we don't know how many players will join
-  const inputRef = useRef(null); //get user input
-  const [userName, setUser] = useState(null); //for username
-  const [view, setView] = useState(false); //show board
-  const [showLead, setLead] = useState(false); //show board
-  const [results, setResults] = useState(false); //show the game results
-  const [playerId, setPlayId] = useState(0); //player id
-  const [activePlayer, setActive] = useState(false); //active player
+  const [currPlayers, setPlayers] = useState([]); // initial array is empty since we don't know how many players will join
+  const inputRef = useRef(null); // get user input
+  const [userName, setUser] = useState(null); // for username
+  const [view, setView] = useState(false); // show board
+  const [showLead, setLead] = useState(false); // show board
+  const [results, setResults] = useState(false); // show the game results
+  const [playerId, setPlayId] = useState(0); // player id
+  const [activePlayer, setActive] = useState(false); // active player
   const [winner, setWinner] = useState(null);
-  const [symbol, setSymbol] = useState("");
+  const [symbol, setSymbol] = useState('');
   const [leader, setLeader] = useState({});
 
   function updateBoard(arrIndex) {
-    let value = "";
+    let value = '';
     let valid = true;
 
     setActive((currAct) => {
-      //only the active player can update the board
+      // only the active player can update the board
       if (currAct) {
-        value = playerId === 1 ? "X" : "O";
+        value = playerId === 1 ? 'X' : 'O';
 
         setBoard((prevBoard) => {
           const tempBoard = [...prevBoard];
@@ -42,71 +42,71 @@ function App() {
           }
 
           if (valid) {
-            //if the game is not drawn or the board includes no empty elements
+            // if the game is not drawn or the board includes no empty elements
             if (
-              calculateWinner(tempBoard) != null ||
-              !tempBoard.includes(null)
+              calculateWinner(tempBoard) != null
+              || !tempBoard.includes(null)
             ) {
               setUser((name) => {
                 if (
-                  calculateWinner(tempBoard) === "X" ||
-                  calculateWinner(tempBoard) === "O"
+                  calculateWinner(tempBoard) === 'X'
+                  || calculateWinner(tempBoard) === 'O'
                 ) {
-                  console.log("Sending message winner!");
-                  socket.emit("turn", {
-                    can_turn: "able",
+                  console.log('Sending message winner!');
+                  socket.emit('turn', {
+                    can_turn: 'able',
                     status: 1,
                     game: name,
                   });
                   setWinner((prevWinner) => name);
                 } else {
-                  socket.emit("turn", {
-                    can_turn: "able",
+                  socket.emit('turn', {
+                    can_turn: 'able',
                     status: 1,
-                    game: "",
+                    game: '',
                   });
-                  setWinner((prevWinner) => "");
+                  setWinner((prevWinner) => '');
                 }
                 // setLeader(lead => data.leaderboard);
                 return name;
               });
 
-              //need to create a state to display the results
+              // need to create a state to display the results
               setResults((res) => true);
             } else {
-              socket.emit("turn", {
-                can_turn: "able",
+              socket.emit('turn', {
+                can_turn: 'able',
                 status: 0,
                 boardVal: value,
               });
               setSymbol((symbol) => value);
             }
 
-            socket.emit("move", { arrIndex: arrIndex, boardVal: value });
+            socket.emit('move', { arrIndex, boardVal: value });
           }
 
           return tempBoard;
         });
 
         return !valid;
-      } else return currAct;
+      } return currAct;
     });
   }
 
   function onLogin() {
     if (inputRef != null) {
-      const userInput = inputRef.current.value; //get the username from the UI
+      const userInput = inputRef.current.value; // get the username from the UI
       setUser((user) => userInput);
-      setView((prevView) => true); //once user clicks login then only show board
-      socket.emit("login", { username: userInput, logged: "loggedIn" }); //just send the username and room
+      setView((prevView) => true); // once user clicks login then only show board
+      socket.emit('login', { username: userInput, logged: 'loggedIn' }); // just send the username and room
     }
   }
 
-  //define once and then always listening
-  //always put listeners in useEffect
+  // define once and then always listening
+  // always put listeners in useEffect
   useEffect(() => {
-    //setup the data object in python file
-    socket.on("move", (data) => {
+    // setup the data object in python file
+    socket.on('move', (data) => {
       setBoard((prevBoard) => {
         const tempBoard = [...prevBoard];
         tempBoard[data.arrIndex] = data.boardVal;
@@ -117,17 +117,17 @@ function App() {
       });
     });
 
-    //going to need multiple socket.ons to listen for various events happening
+    // going to need multiple socket.ons to listen for various events happening
 
-    //updating the playerCount
-    socket.on("login", (data) => {
+    // updating the playerCount
+    socket.on('login', (data) => {
       setActive((active) => data.user_dict[socket.id][2]);
       setPlayId((id) => data.user_dict[socket.id][1]);
       setPlayers((users) => [...data.users]);
-      //update leaderboard
+      // update leaderboard
       setLeader((scoreBoard) => JSON.parse(data.leaderboard));
     });
-    socket.on("turn", (data) => {
+    socket.on('turn', (data) => {
       setSymbol((symbol) => data.boardVal);
       setPlayId((id) => {
         console.log(id);
@@ -136,17 +136,17 @@ function App() {
       });
 
       if (data.status === 1) {
-        console.log("The winner is: " + data.game);
+        console.log(`The winner is: ${data.game}`);
         setWinner((win) => data.game);
         setLeader((scoreBoard) => JSON.parse(data.leaderboard));
       }
     });
 
-    socket.on("disconnect", (data) => {
+    socket.on('disconnect', (data) => {
       window.location.reload();
     });
 
-    socket.on("replay", (data) => {
+    socket.on('replay', (data) => {
       setWinner((prevWinner) => null);
       setBoard((board) => data.board);
       setResults((res) => false);
@@ -159,18 +159,18 @@ function App() {
   }, []);
 
   function onReplay() {
-    //reset the board
+    // reset the board
     setBoard((board) => Array(9).fill(null));
     setWinner((prevWinner) => null);
 
-    //reset the active players
+    // reset the active players
     if (playerId === 1) {
       setActive((active) => true);
     }
-    //reset the results
+    // reset the results
     setResults((res) => false);
-    //reset all of the items again
-    socket.emit("replay", {
+    // reset all of the items again
+    socket.emit('replay', {
       board: Array(9).fill(null),
       res: false,
       active: false,
@@ -191,9 +191,9 @@ function App() {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (
-        squares[a] &&
-        squares[a] === squares[b] &&
-        squares[a] === squares[c]
+        squares[a]
+        && squares[a] === squares[b]
+        && squares[a] === squares[c]
       ) {
         return squares[a];
       }
@@ -201,8 +201,8 @@ function App() {
     return null;
   }
 
-  //if they can see the board that means that they are logged in and only then show the button to play again
-  let button = "";
+  // if they can see the board that means that they are logged in and only then show the button to play again
+  let button = '';
   if (view && (playerId === 1 || playerId === 2)) {
     button = (
       <button className="again" onClick={() => onReplay()}>
@@ -210,22 +210,22 @@ function App() {
       </button>
     );
   } else {
-    button = "";
+    button = '';
   }
 
-  let active1,
-    active2 = "";
+  let active1;
+  let active2 = '';
   if (!results) {
     console.log(symbol);
-    if (symbol === "X") {
-      active1 = "no-show";
-      active2 = "show";
-    } else if (symbol === "O") {
-      active1 = "show";
-      active2 = "no-show";
+    if (symbol === 'X') {
+      active1 = 'no-show';
+      active2 = 'show';
+    } else if (symbol === 'O') {
+      active1 = 'show';
+      active2 = 'no-show';
     } else {
-      active1 = "show";
-      active2 = "no-show";
+      active1 = 'show';
+      active2 = 'no-show';
     }
   }
 
@@ -240,16 +240,26 @@ function App() {
           <div className="players">
             <div>
               <h2 className="users">
-                Welcome, <span>{userName}</span>!
+                Welcome,
+                {' '}
+                <span>{userName}</span>
+                !
               </h2>
             </div>
             <div>
-              {" "}
+              {' '}
               <h2 className="users1">
-                {" "}
-                <span class={active1}>{currPlayers[0]}</span> vs.{" "}
-                <span class={active2}>{currPlayers[1]} </span>
-              </h2>{" "}
+                {' '}
+                <span className={active1}>{currPlayers[0]}</span>
+                {' '}
+                vs.
+                {' '}
+                <span className={active2}>
+                  {currPlayers[1]}
+                  {' '}
+                </span>
+              </h2>
+              {' '}
             </div>
             <LeaderBoard
               leader={leader}

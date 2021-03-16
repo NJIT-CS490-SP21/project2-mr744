@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export function User(props) {
   return (
@@ -7,18 +7,22 @@ export function User(props) {
       <div className="viewers">
         <ul>
           {props.players.map((elem, index) => {
-            if (index > 1)
+            if (index > 1) {
               return (
                 <div key={index} index={index}>
                   <div>
                     <li>
-                      <h3> {elem}</h3>
-                    </li>{" "}
+                      <h3>
+                        {' '}
+                        {elem}
+                      </h3>
+                    </li>
+                    {' '}
                   </div>
                 </div>
               );
-            else
-              return "";
+            }
+            return '';
           })}
         </ul>
       </div>
