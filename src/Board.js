@@ -23,13 +23,13 @@ function Board({ updateBoard, board }) {
 
 Board.defaultProps = {
   board: PropTypes.instanceOf(Array),
-  updateBoard: PropTypes.instanceOf(Array),
+  updateBoard: PropTypes.func,
 
 };
 Board.propTypes = {
   // board: PropTypes.arrayOf(PropTypes.string),
   board: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string])),
-  updateBoard: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string])),
+  updateBoard: PropTypes.func,
   // updateBoard: PropTypes.arrayOf(PropTypes.string),
 };
 export default Board;

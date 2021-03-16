@@ -269,9 +269,8 @@ function App() {
             />
           </div>
 
-          <div className="center-board">
+          <div data-testid="board-shown" className="center-board">
             <Result result={results} button={button} winner={winner} />
-
             <Board updateBoard={updateBoard} board={board} />
 
             <User players={currPlayers} />
