@@ -5,7 +5,7 @@ Date: 3/14/2021
 # disabling some of the errors
 # pylint: disable= E1101, C0413, R0903, W0603, W1508
 import os
-from flask import Flask, send_from_directory, json, request, session  # pylint: disable=unused-import
+from flask import Flask, send_from_directory, json, request, session
 from flask_socketio import SocketIO, join_room
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
