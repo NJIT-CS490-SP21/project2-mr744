@@ -24,7 +24,6 @@ function Board({ updateBoard, board }) {
 Board.defaultProps = {
   board: PropTypes.instanceOf(Array),
   updateBoard: PropTypes.func,
-
 };
 Board.propTypes = {
   // board: PropTypes.arrayOf(PropTypes.string),

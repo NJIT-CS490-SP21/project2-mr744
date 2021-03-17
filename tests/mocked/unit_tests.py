@@ -99,14 +99,16 @@ class UpdateScoreTestCase(unittest.TestCase):
     def mocked_my_filter_by(self, the_users,num):
         self.initial_db_mock[the_users]+=num
     
-    def mocked_the_player_score(self, the_users, num):
+    def mocked_person_query_all(self):
         pass
     
     def mocked_db_session_commit(self):
         pass
     
-    def mocked_person_query_all(self):
+    def mocked_the_player_score(self, the_users, num):
         pass
+
+
     
     def mocked_get_leader(self, user_list):
         user_list = self.initial_db_mock

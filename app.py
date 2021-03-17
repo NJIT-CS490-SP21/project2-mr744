@@ -5,7 +5,7 @@ Date: 3/14/2021
 # disabling some of the errors
 # pylint: disable= E1101, C0413, R0903, W0603, W1508
 import os
-from flask import Flask, send_from_directory, json, request, session # pylint: disable=unused-import
+from flask import Flask, send_from_directory, json, request, session  # pylint: disable=unused-import
 from flask_socketio import SocketIO, join_room
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -33,7 +33,7 @@ USERS_LIST = []
 USER_DICT = {}
 ID_COUNT = 1
 LIMIT = 0
-LEADERBOARD= {}
+LEADERBOARD = {}
 
 socketio = SocketIO(app,
                     cors_allowed_origins="*",
@@ -63,10 +63,11 @@ def on_disconnect():
 
     if request.sid in USER_DICT:
         if USER_DICT[request.sid][1] <= 2:
-            USERS_LIST= clear_on_id(USER_DICT[request.sid][1], USERS_LIST)
+            USERS_LIST = clear_on_id(USER_DICT[request.sid][1], USERS_LIST)
             socketio.emit('disconnect', {'users_list': USERS_LIST})
 
     print('User disconnected!')
+
 
 def clear_on_id(player_id, users_list):
     ''' clear all data structures upon p1 or p2 leaving '''
@@ -99,7 +100,7 @@ def on_players(data):
     #player not in db, then add them
     if query_player is None:
 
-        new_player = models.Players(username=data['username'],score=100)
+        new_player = models.Players(username=data['username'], score=100)
         LEADERBOARD = add_player(new_player)
         print("here")
         print(LEADERBOARD)
@@ -113,7 +114,6 @@ def on_players(data):
     USER_DICT[request.sid] = [data['username'], ID_COUNT, is_active]
 
     USERS_LIST = on_user_join(data['username'], USERS_LIST)
-
 
     room = data['logged']
     join_room(room)
@@ -131,11 +131,12 @@ def on_players(data):
     data['leaderboard'] = json.dumps(LEADERBOARD, sort_keys=False)
     socketio.emit('login', data, broadcast=True, include_self=True, room=room)
 
+
 def on_user_join(name, users_list):
     ''' when user joins '''
     global ID_COUNT
     users_list.append(name)
-    ID_COUNT+=1
+    ID_COUNT += 1
     return users_list
 
 
@@ -146,10 +147,13 @@ def add_player(new_player):
     ordered_list = my_order_by()
     return get_leader(ordered_list)
 
+
 def my_order_by():
     ''' ordering the players '''
-    ordered_list = models.Players.query.order_by(desc(models.Players.score)).all()
+    ordered_list = models.Players.query.order_by(desc(
+        models.Players.score)).all()
     return ordered_list
+
 
 def get_leader(query_result):
     '''retrieving the leaderboard'''
@@ -158,6 +162,7 @@ def get_leader(query_result):
     for user in query_result:
         leaderboard[user.username] = user.score
     return leaderboard
+
 
 @socketio.on('turn')
 def on_next_turn(data):
@@ -176,7 +181,7 @@ def on_next_turn(data):
         if data['game'] != "":
 
             # find the winner, add one point
-            update_score(data['game'], 1) #
+            update_score(data['game'], 1)  #
             # #find the loser, subtract one point
             loser_index = -1
             if USERS_LIST.index(
@@ -186,7 +191,7 @@ def on_next_turn(data):
             else:
                 loser_index = 0
 
-            LEADERBOARD = update_score(USERS_LIST[loser_index], -1) #loser
+            LEADERBOARD = update_score(USERS_LIST[loser_index], -1)  #loser
 
         data['leaderboard'] = json.dumps(LEADERBOARD, sort_keys=False)
         #find the loser, minus one point
@@ -198,20 +203,25 @@ def on_next_turn(data):
         print("Sending!")
         #emit the playerId and if it is their turn
         socketio.emit('turn', data, broadcast=True, include_self=False)
+
+
 def update_score(the_username, num):
     ''' updating the score '''
-    the_player = my_filter_by(the_username,num)
-    player_score(the_player,num)
+    the_player = my_filter_by(the_username, num)
+    player_score(the_player, num)
     db.session.commit()
     ordered_list = my_order_by()
     return get_leader(ordered_list)
-def my_filter_by(the_username,num):
+
+
+def my_filter_by(the_username, num):
     ''' searching specific user '''
     print(num)
-    return db.session.query(models.Players).filter_by(
-        username=the_username).first()
+    return db.session.query(
+        models.Players).filter_by(username=the_username).first()
 
-def player_score(the_player,num):
+
+def player_score(the_player, num):
     ''' the player score is updated'''
     the_player.score = the_player.score + num
 

@@ -4,12 +4,7 @@ import PropTypes from 'prop-types';
 function Box({ index, updateBoard, board }) {
   const boardPos = `board-click${index}`;
   return (
-    <div
-      onClick={() => updateBoard(index)}
-      className="box"
-      aria-hidden="true"
-
-    >
+    <div onClick={() => updateBoard(index)} className="box" aria-hidden="true">
       {' '}
       <h1 data-testid={boardPos}>{board[index]}</h1>
     </div>

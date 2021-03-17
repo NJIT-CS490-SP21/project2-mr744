@@ -64,7 +64,12 @@ function LeaderBoard({
       {showLead ? (
         <>
           <div className="leader-board">
-            <button data-testid="leader-shown" type="button" onClick={() => onClickLeader()} className="show-leader">
+            <button
+              data-testid="leader-shown"
+              type="button"
+              onClick={() => onClickLeader()}
+              className="show-leader"
+            >
               {' '}
               <span>Leaderboard</span>
               {' '}
@@ -86,7 +91,12 @@ function LeaderBoard({
         <>
           {' '}
           <div className="no-leader-board">
-            <button data-testid="leader-shown" type="button" onClick={() => onClickLeader()} className="no-leader">
+            <button
+              data-testid="leader-shown"
+              type="button"
+              onClick={() => onClickLeader()}
+              className="no-leader"
+            >
               <span>Leaderboard </span>
             </button>
           </div>
@@ -107,7 +117,6 @@ LeaderBoard.propTypes = {
   setLead: PropTypes.func,
   showLead: PropTypes.bool,
   user: PropTypes.string,
-
 };
 
 export default LeaderBoard;

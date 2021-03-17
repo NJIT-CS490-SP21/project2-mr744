@@ -22,12 +22,8 @@ module.exports = {
     // 'testing-library',
   ],
   rules: {
-        "react/no-array-index-key": "off", //fine
-        "react-hooks/exhaustive-deps": "off", //fine
-        // "react/react-in-jsx-scope": "off", // comment this one out
-        // "no-restricted-syntax": "off", // iterators generators 
+        "react/no-array-index-key": "off",
+        "react-hooks/exhaustive-deps": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        // "no-unused-vars": "off", // comment this one out
-        "no-undef": "off", //comment this one out
   },
 };
