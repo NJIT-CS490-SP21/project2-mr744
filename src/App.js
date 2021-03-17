@@ -82,28 +82,32 @@ function App() {
                     status: 1,
                     game: name,
                   });
-                  setWinner((prevWinner) => name);
+                  // setWinner((prevWinner) => name);
+                  setWinner(name);
                 } else {
                   socket.emit('turn', {
                     can_turn: 'able',
                     status: 1,
                     game: '',
                   });
-                  setWinner((prevWinner) => '');
+                  // setWinner((prevWinner) => '');
+                  setWinner('');
                 }
                 // setLeader(lead => data.leaderboard);
                 return name;
               });
 
               // need to create a state to display the results
-              setResults((res) => true);
+              // setResults((res) => true);
+              setResults(true);
             } else {
               socket.emit('turn', {
                 can_turn: 'able',
                 status: 0,
                 boardVal: value,
               });
-              setSymbol((symbol1) => value);
+              // setSymbol((symbol1) => value);
+              setSymbol(value);
             }
 
             socket.emit('move', { arrIndex, boardVal: value });
@@ -120,8 +124,10 @@ function App() {
   function onLogin() {
     if (inputRef != null) {
       const userInput = inputRef.current.value; // get the username from the UI
-      setUser((user) => userInput);
-      setView((prevView) => true); // once user clicks login then only show board
+      // setUser((user) => userInput);
+      setUser(userInput);
+      // setView((prevView) => true); // once user clicks login then only show board
+      setView(true); // once user clicks login then only show board
       socket.emit('login', { username: userInput, logged: 'loggedIn' }); // just send the username and room
     }
   }
@@ -135,7 +141,8 @@ function App() {
         const tempBoard = [...prevBoard];
         tempBoard[data.arrIndex] = data.boardVal;
         if (calculateWinner(tempBoard) != null || !tempBoard.includes(null)) {
-          setResults((res) => true);
+          // setResults((res) => true);
+          setResults(true);
         }
         return tempBoard;
       });
@@ -145,37 +152,50 @@ function App() {
 
     // updating the playerCount
     socket.on('login', (data) => {
-      setActive((active) => data.user_dict[socket.id][2]);
-      setPlayId((id) => data.user_dict[socket.id][1]);
-      setPlayers((users) => [...data.users]);
+      // setActive((active) => data.user_dict[socket.id][2]);
+      // setPlayId((id) => data.user_dict[socket.id][1]);
+      // setPlayers((users) => [...data.users]);
+      setActive(data.user_dict[socket.id][2]);
+      setPlayId(data.user_dict[socket.id][1]);
+      setPlayers([...data.users]);
       // update leaderboard
-      setLeader((scoreBoard) => JSON.parse(data.leaderboard));
+      // setLeader((scoreBoard) => JSON.parse(data.leaderboard));
+      setLeader(JSON.parse(data.leaderboard));
     });
     socket.on('turn', (data) => {
-      setSymbol((symbol1) => data.boardVal);
+      // setSymbol((symbol1) => data.boardVal);
+      setSymbol(data.boardVal);
       setPlayId((id) => {
         // console.log(id);
-        if (id < 3) setActive((prevActive) => data.able);
+        // if (id < 3) setActive((prevActive) => data.able);
+        if (id < 3) setActive(data.able);
         return id;
       });
 
       if (data.status === 1) {
         // console.log(`The winner is: ${data.game}`);
-        setWinner((win) => data.game);
-        setLeader((scoreBoard) => JSON.parse(data.leaderboard));
+        // setWinner((win) => data.game);
+        setWinner(data.game);
+        // setLeader((scoreBoard) => JSON.parse(data.leaderboard));
+        setLeader(JSON.parse(data.leaderboard));
       }
     });
 
-    socket.on('disconnect', (data) => {
+    socket.on('disconnect', () => {
       window.location.reload();
     });
+    // socket.on('disconnect', window.location.reload());
 
     socket.on('replay', (data) => {
-      setWinner((prevWinner1) => null);
-      setBoard((board1) => data.board);
-      setResults((res) => false);
+      // setWinner((prevWinner1) => null);
+      // setBoard((board1) => data.board);
+      // setResults((res) => false);
+      setWinner(null);
+      setBoard(data.board);
+      setResults(false);
       setPlayId((id) => {
-        if (id === 1) setActive((prev) => true);
+        // if (id === 1) setActive((prev) => true);
+        if (id === 1) setActive(true);
 
         return id;
       });
@@ -184,15 +204,19 @@ function App() {
 
   function onReplay() {
     // reset the board
-    setBoard((board1) => Array(9).fill(null));
-    setWinner((prevWinner) => null);
+    // setBoard((board1) => Array(9).fill(null));
+    setBoard(Array(9).fill(null));
+    // setWinner((prevWinner) => null);
+    setWinner(null);
 
     // reset the active players
     if (playerId === 1) {
-      setActive((active) => true);
+      // setActive((active) => true);
+      setActive(true);
     }
     // reset the results
-    setResults((res) => false);
+    // setResults((res) => false);
+    setResults(false);
     // reset all of the items again
     socket.emit('replay', {
       board: Array(9).fill(null),
@@ -211,6 +235,7 @@ function App() {
     );
   } else {
     button = '';
+    if (activePlayer) button = '';
   }
 
   let active1;
@@ -272,7 +297,6 @@ function App() {
           <div data-testid="board-shown" className="center-board">
             <Result result={results} button={button} winner={winner} />
             <Board updateBoard={updateBoard} board={board} />
-
             <User players={currPlayers} />
           </div>
         </>

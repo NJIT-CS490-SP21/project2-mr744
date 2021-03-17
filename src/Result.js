@@ -11,7 +11,7 @@ function Result({ result, button, winner }) {
 
   return (
     <div className="results">
-      <h2> Game Result </h2>
+      <h2 data-testid='game'> Game Result </h2>
       {result ? (
         <>
           <div>

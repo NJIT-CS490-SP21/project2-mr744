@@ -3,16 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react' ;
 import '@testing-library/jest-dom' 
 import App from './App';
 
-// test('Login disappears', () => {
-//   const result = render(<App />);
-  
-//   const login = screen.getByText('Login');
-//   expect(login).toBeInTheDocument();
-  
-//   fireEvent.click(login);
-//   expect(login).not.toBeInTheDocument();
-// });
-test('Board appears', () => {
+
+test('The Board will appear!    ', () => {
   const result = render(<App />);
   
   //board not shown yet
@@ -28,7 +20,7 @@ test('Board appears', () => {
 
 });
 
-test('LeaderBoard appears',()=>{
+test('The LeaderBoard will appear!',()=>{
    
    const result = render(<App />);
    const login = screen.getByText('Login');
@@ -48,24 +40,17 @@ test('LeaderBoard appears',()=>{
   
 });
 
-test('Board Clicking', () => {
+test('The Spectators and Game Progress!', () => {
   const result = render(<App />);
   
   const login = screen.getByText('Login');
   fireEvent.click(login);
   
+  const theSpec = screen.getByTestId('spectators');
+  const theGame = screen.getByTestId('game')
   
-  
-  
-  const boardItem = screen.getByTestId('board-click1');
-//   fireEvent.click(boardItem, { target: { value: 'X' }});
-  fireEvent.click(boardItem);
-  
-//   expect(boardItem).toEqual(expect.arrayContaining(['X','','','','','','','','']))
-//   expect(screen.getByText('X'));
-    
-  expect(boardItem).value.toBeInTheDocument();
-  
-
+  expect(theSpec).toBeInTheDocument();
+  expect(theGame).toBeInTheDocument();
+   
 });
 

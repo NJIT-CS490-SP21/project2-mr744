@@ -5,13 +5,13 @@ function Box({ index, updateBoard, board }) {
   const boardPos = `board-click${index}`;
   return (
     <div
-      data-testid={boardPos}
       onClick={() => updateBoard(index)}
       className="box"
       aria-hidden="true"
+
     >
       {' '}
-      <h1>{board[index]}</h1>
+      <h1 data-testid={boardPos}>{board[index]}</h1>
     </div>
   );
 }

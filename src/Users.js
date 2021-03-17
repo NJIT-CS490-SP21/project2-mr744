@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function User({ players }) {
   return (
     <div className="spectators">
-      <h2> Spectators </h2>
+      <h2 data-testid="spectators"> Spectators </h2>
       <div className="viewers">
         <ul>
           {players.map((elem, index) => {

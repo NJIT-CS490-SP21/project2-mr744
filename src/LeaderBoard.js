@@ -6,7 +6,7 @@ function LeaderBoard({
 }) {
   const items = [];
   let count = 1;
-  for (const [key, value] of Object.entries(leader)) {
+  Object.keys(leader).map((key) => {
     if (user === key) {
       items.push(
         <tr className="select-user" index={count}>
@@ -22,7 +22,7 @@ function LeaderBoard({
           </td>
           {' '}
           <td>
-            {value}
+            {leader[key]}
             {' '}
           </td>
           {' '}
@@ -43,7 +43,7 @@ function LeaderBoard({
           </td>
           {' '}
           <td>
-            {value}
+            {leader[key]}
             {' '}
           </td>
           {' '}
@@ -52,7 +52,8 @@ function LeaderBoard({
     }
 
     count += 1;
-  }
+    return '';
+  });
 
   function onClickLeader() {
     setLead((prev) => !prev);
