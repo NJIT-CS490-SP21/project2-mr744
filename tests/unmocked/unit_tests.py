@@ -1,9 +1,6 @@
-'''
-    split_test.py
-    
-    This file tests string.split(). In the real world, there's no need to test
-    Python's library functions, but we're just doing this as an intro to unit
-    tests.
+'''   
+The class ClearListOnDisconnectCase will test the clearing of users from the userlist when either player 1 or player 2 leave the match
+The class OnJoinCase will test whether users are being added to the userlist properly when they join
 '''
 
 import unittest
