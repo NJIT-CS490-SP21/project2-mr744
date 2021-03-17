@@ -77,7 +77,7 @@ def clear_on_id(player_id, users_list):
         LEADERBOARD.clear()
         users_list.clear()
         ID_COUNT = 1
-    return USERS_LIST
+    return users_list
 
 
 @socketio.on('move')
