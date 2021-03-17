@@ -1,3 +1,7 @@
+'''   
+The class AddUserTestCase will mock the insertion of users in our database
+The class UpdateScoreTestCase will mock the updating of scores for winners and losers
+'''
 import unittest
 import unittest.mock as mock
 from unittest.mock import patch
